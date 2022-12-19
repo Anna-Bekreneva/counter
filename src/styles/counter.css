@@ -1,0 +1,26 @@
+.counter {
+    max-width: 570px;
+    width: 100%;
+}
+
+.counter-tablo {
+    position: relative;
+}
+
+.counter-tablo__number {
+    font-size: 46px;
+    font-weight: 600;
+}
+
+.counter-tablo__number--active {
+    color: #f5023c;
+    transition: color 0.4s;
+}
+
+.counter-tablo__text {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
