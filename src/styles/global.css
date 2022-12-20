@@ -107,8 +107,13 @@ body {
     border-radius: 8px;
     box-shadow: 0 4px 4px rgba(0, 48, 51, 0.25);
     border: 2px solid transparent;
-    transition: border-color 0.4s;
+    transition: border-color 0.4s, color 0.4s;
     text-align: center;
+}
+
+.field--error {
+    border-color: #f5023c;
+    color: #f5023c;
 }
 
 .field::placeholder {

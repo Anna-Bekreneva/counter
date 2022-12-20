@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {useState} from 'react';
 import './styles/global.css';
 import './styles/reset.css';
 import './styles/counter.css';
@@ -7,26 +7,16 @@ import {Counter} from './components/Counter/Counter';
 import {Settings} from './components/Settings/Settings';
 
 export type ButtonCounterType = 'inc' | 'dec' | 'res'
-export type ButtonSettingsType = 'save' | 'default' | 'random'
 
 function App () {
 
-	const [maxNumber, setMaxNumber] = useState<number>(5)
-	const [minNumber, setMinNumber] = useState<number>(0)
+	const DEFAULT_MAX = 5
+	const DEFAULT_MIN = 0
 
-	const [counter, setCounter] = useState<number>(minNumber)
+	const [maxNumber, setMaxNumber] = useState(DEFAULT_MAX)
+	const [minNumber, setMinNumber] = useState(DEFAULT_MIN)
 
-	const [maxNumberValue, setMaxNumberValue] = useState(maxNumber)
-	const [minNumberValue, setMinNumberValue] = useState(minNumber)
-
-	const changeMaxHandler = (event: ChangeEvent<HTMLInputElement>) => setMaxNumberValue(Number(event.currentTarget.value))
-	const changeMinHandler = (event: ChangeEvent<HTMLInputElement>) => setMinNumberValue(Number(event.currentTarget.value))
-
-	const setValues = (max: number, min: number) => {
-		setMaxNumber(max)
-		setMinNumber(min)
-		setCounter(min)
-	}
+	const [counter, setCounter] = useState(minNumber)
 
 	const buttonCounterOnClickCallback = (type: ButtonCounterType) => {
 		if (type === 'inc') {
@@ -44,16 +34,20 @@ function App () {
 		}
 	}
 
-	const buttonSettingsOnClickCallback = (type: ButtonSettingsType, max: number, min: number) => {
-
+	const saveSettings = (max: number, min: number) => {
+		setMaxNumber(max)
+		setMinNumber(min)
+		setCounter(min)
 	}
+
+	const defaultSettings = () => setCounter(DEFAULT_MIN)
 
 	return (
 		<div className='wrapper'>
 			<div className='container'>
 				<h1 className='heading'>Counter</h1>
 				<div className='wrapper__container'>
-					<Settings buttonSettingsOnClickCallback={buttonSettingsOnClickCallback} maxNumber={maxNumber} minNumber={minNumber}></Settings>
+					<Settings saveSettings={saveSettings} defaultSettings={defaultSettings} maxNumber={maxNumber} minNumber={minNumber} DEFAULT_MAX={DEFAULT_MAX} DEFAULT_MIN={DEFAULT_MIN}></Settings>
 					<Counter buttonCounterOnClickCallback={buttonCounterOnClickCallback} counter={counter} maxNumber={maxNumber} minNumber={minNumber}></Counter>
 				</div>
 			</div>

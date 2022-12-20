@@ -17,10 +17,27 @@
     align-items: center;
 }
 
-.settings__item:not(:last-child) {
-    margin-bottom: 20px;
+.settings__content {
+    position: relative;
+}
+
+.settings__content:not(:last-child) {
+    margin-bottom: 25px;
 }
 
 .settings__label {
-    margin-right: 20px;
+    margin-right: 16px;
+}
+
+.settings__field {
+    max-width: 270px;
+    width: 100%;
+}
+
+.settings__error {
+    color: #f5023c;
+    font-size: 14px;
+    position: absolute;
+    right: 0;
+    bottom: -20px;
 }
