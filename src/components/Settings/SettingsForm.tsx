@@ -1,57 +1,108 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import {SettingsManagement} from './SettingsManagement';
 
 type SettingsFormPropsType = {
 	maxNumber: number
 	minNumber: number
+	stepNumber: number
+	LIMIT: number
 	DEFAULT_MAX: number
 	DEFAULT_MIN: number
+	DEFAULT_STEP: number
 	defaultSettings: () => void
-	saveSettings: (max: number, min: number) => void
+	saveSettings: (max: number, min: number, step: number) => void
 }
 
 export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 
 	const [newMaxValue, setNewMaxValue] = useState(props.maxNumber)
 	const [newMinValue, setNewMinValue] = useState(props.minNumber)
-	const [error, setError] = useState(false)
+	const [newStepValue, setNewStepValue] = useState(props.stepNumber)
+
+	const [errorMax, setErrorMax] = useState('')
+	const [errorMin, setErrorMin] = useState('')
+	const [errorStep, setErrorStep] = useState('')
+
+	const errorMessageGreaterMax = 'This value must be greater than the min value'
+	const errorMessageLessMin = 'This value must be less than the max value'
+	const errorMessageLength = 'It\'s number very long'
+	const errorMessageWhole = 'Only whole numbers are allowed'
+	const errorMessagePositive = 'Only positive numbers'
 
 	const changeMaxValue = (event: ChangeEvent<HTMLInputElement>) => {
-		error && setError(false)
-		setNewMaxValue(Number(event.currentTarget.value))
+		if (errorMax && (Number(event.currentTarget.value) > newMinValue)) {
+			setErrorMax('')
+		}
+
+		if (event.currentTarget.value.length > 6) {
+			setErrorMax(errorMessageLength)
+		} else {
+			setNewMaxValue(Number(event.currentTarget.value))
+		}
+
+		if (event.currentTarget.value[0] === '0' || event.currentTarget.value.length === 0) {
+			setErrorMax(errorMessageWhole)
+		}
+	}
+
+	const onKeyPressHandler = (event: KeyboardEvent<HTMLInputElement>) => {
+		if (event.key === ',') {
+			setErrorMax(errorMessageWhole)
+		}
+
+		if (event.key === '-') {
+			setErrorMax(errorMessagePositive)
+		}
 	}
 
 	const changeMinValue = (event: ChangeEvent<HTMLInputElement>) => {
-		error && setError(false)
+		errorMin && setErrorMin('')
 		setNewMinValue(Number(event.currentTarget.value))
 	}
 
-	const errorMessageMax = error && <span className='settings__error'>This value must be greater than the min value</span>
-	const errorMessageMin = error && <span className='settings__error'>This value must be less than the max value</span>
+	const changeStepValue = (event: ChangeEvent<HTMLInputElement>) => {
+		errorStep && setErrorStep('')
+		setNewStepValue(Number(event.currentTarget.value))
+	}
 
 	const saveSettings = () => {
 		if (newMaxValue > newMinValue) {
-			props.saveSettings(newMaxValue, newMinValue)
+			props.saveSettings(newMaxValue, newMinValue, newStepValue)
 		}
-
 		else {
-			setError(true)
+			setErrorMax(errorMessageGreaterMax)
+			setErrorMin(errorMessageLessMin)
 		}
+	}
+
+	const resetError = () => {
+		errorMax && setErrorMax('')
+		errorMin && setErrorMin('')
+		errorStep && setErrorStep('')
 	}
 
 	const defaultSettings = () => {
 		setNewMaxValue(props.DEFAULT_MAX);
 		setNewMinValue(props.DEFAULT_MIN);
+		setNewStepValue(props.DEFAULT_STEP)
 		props.defaultSettings();
-		error && setError(false)
+		resetError()
 	}
 
 	const randomSettings = () => {
-		//setNewMaxValue(Math.floor(Math.random() * max));
-		const max = Math.floor(Math.random() * (10000 - 0) + 0)
-		const min =
-		error && setError(false)
-		//props.saveSettings()
+		const randomMax = Math.floor(Math.random() * (props.LIMIT - newStepValue)) + newStepValue;
+		const randomMin = Math.floor(Math.random() * (randomMax - props.stepNumber))
+
+		let randomStep = 0;
+		do {
+			randomStep = Math.floor(Math.random() * randomMax) + 1 ;
+		} while ( (randomMax - randomMin) % randomStep != 0)
+
+		setNewMaxValue(randomMax)
+		setNewMinValue(randomMin)
+		setNewStepValue(randomStep)
+		resetError()
+		props.saveSettings(randomMax, randomMin, randomStep)
 	}
 
 	return (
@@ -61,20 +112,30 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 					<div className="settings__content">
 						<div className='settings__item'>
 							<label className='settings__label' htmlFor='max'>Enter max value</label>
-							<input className={ error ? 'settings__field field field--error' : 'settings__field field'} value={newMaxValue} onChange={changeMaxValue} type='number'/>
+							<input className={ errorMax ? 'settings__field field field--error' : 'settings__field' +
+								' field'} id='max' value={newMaxValue} onChange={changeMaxValue} onKeyPress={onKeyPressHandler} type='number'/>
 						</div>
-						{errorMessageMax}
+						<span className='settings__error'>{errorMax}</span>
 					</div>
 					<div className="settings__content">
 						<div className='settings__item'>
 							<label className='settings__label' htmlFor='min'>Enter min value</label>
-							<input className={ error ? 'settings__field field field--error' : 'settings__field field'} value={newMinValue} onChange={changeMinValue} type='number'/>
+							<input className={ errorMin ? 'settings__field field field--error' : 'settings__field' +
+								' field'} id='min' value={newMinValue} onChange={changeMinValue} onKeyPress={onKeyPressHandler} type='number'/>
 						</div>
-						{errorMessageMin}
+						<span className='settings__error'>{errorMin}</span>
+					</div>
+					<div className="settings__content">
+						<div className='settings__item'>
+							<label className='settings__label' htmlFor='step'>Enter step</label>
+							<input className={ errorStep ? 'settings__field field field--error' : 'settings__field' +
+								' field'} id='step' value={newStepValue} onChange={changeStepValue} onKeyPress={onKeyPressHandler} type='number'/>
+						</div>
+						<span className='settings__error'>{errorStep}</span>
 					</div>
 				</div>
 			</div>
-			<SettingsManagement saveSettings={saveSettings} defaultSettings={defaultSettings} error={error} ></SettingsManagement>
+			<SettingsManagement saveSettings={saveSettings} defaultSettings={defaultSettings} randomSettings={randomSettings}></SettingsManagement>
 		</form>
 	);
 };

@@ -63,6 +63,11 @@ input {
     border: 0;
 }
 
+button:focus,
+input:focus {
+    outline: 0;
+}
+
 button {
     cursor: pointer;
     appearance: none;

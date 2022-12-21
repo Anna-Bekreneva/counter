@@ -27,6 +27,7 @@
 
 .settings__label {
     margin-right: 16px;
+    cursor: pointer;
 }
 
 .settings__field {
@@ -35,7 +36,7 @@
 }
 
 .settings__error {
-    color: #f5023c;
+    color: #ea0038;
     font-size: 14px;
     position: absolute;
     right: 0;

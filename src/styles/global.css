@@ -42,7 +42,7 @@ body {
 }
 
 .tablo {
-    height: 220px;
+    height: 280px;
     width: 100%;
     padding: 20px;
     border-radius: 20px;
@@ -112,8 +112,8 @@ body {
 }
 
 .field--error {
-    border-color: #f5023c;
-    color: #f5023c;
+    border-color: #ea0038;
+    color: #ea0038;
 }
 
 .field::placeholder {

@@ -12,43 +12,52 @@ function App () {
 
 	const DEFAULT_MAX = 5
 	const DEFAULT_MIN = 0
+	const DEFAULT_STEP = 1
+
+	const LIMIT = 30
+	const LIMIT_STEP = LIMIT - DEFAULT_STEP
 
 	const [maxNumber, setMaxNumber] = useState(DEFAULT_MAX)
 	const [minNumber, setMinNumber] = useState(DEFAULT_MIN)
+	const [stepNumber, setStepNumber] = useState(DEFAULT_STEP)
 
 	const [counter, setCounter] = useState(minNumber)
 
 	const buttonCounterOnClickCallback = (type: ButtonCounterType) => {
 		if (type === 'inc') {
-			if(counter <= maxNumber - 1 && counter >= minNumber) {
-				setCounter(counter + 1)
+			if(counter <= maxNumber - stepNumber && counter >= minNumber) {
+				setCounter(counter + stepNumber)
 			}
 		}
 
 		if (type === 'dec') {
-			counter > minNumber && setCounter(counter - 1)
+			counter > minNumber && setCounter(counter - stepNumber)
 		}
 
 		if (type === 'res') {
-			counter > minNumber + 1 && setCounter(minNumber)
+			counter > minNumber + stepNumber && setCounter(minNumber)
 		}
 	}
 
-	const saveSettings = (max: number, min: number) => {
+	const saveSettings = (max: number, min: number, step: number) => {
 		setMaxNumber(max)
 		setMinNumber(min)
+		setStepNumber(step)
 		setCounter(min)
 	}
 
-	const defaultSettings = () => setCounter(DEFAULT_MIN)
+	const defaultSettings = () => {
+		setCounter(DEFAULT_MIN);
+		setStepNumber(DEFAULT_STEP)
+	}
 
 	return (
 		<div className='wrapper'>
 			<div className='container'>
 				<h1 className='heading'>Counter</h1>
 				<div className='wrapper__container'>
-					<Settings saveSettings={saveSettings} defaultSettings={defaultSettings} maxNumber={maxNumber} minNumber={minNumber} DEFAULT_MAX={DEFAULT_MAX} DEFAULT_MIN={DEFAULT_MIN}></Settings>
-					<Counter buttonCounterOnClickCallback={buttonCounterOnClickCallback} counter={counter} maxNumber={maxNumber} minNumber={minNumber}></Counter>
+					<Settings saveSettings={saveSettings} defaultSettings={defaultSettings} maxNumber={maxNumber} minNumber={minNumber} stepNumber={stepNumber} DEFAULT_MAX={DEFAULT_MAX} DEFAULT_MIN={DEFAULT_MIN} DEFAULT_STEP={DEFAULT_STEP} LIMIT={LIMIT}></Settings>
+					<Counter buttonCounterOnClickCallback={buttonCounterOnClickCallback} counter={counter} maxNumber={maxNumber} minNumber={minNumber} stepNumber={stepNumber}></Counter>
 				</div>
 			</div>
 		</div>
