@@ -118,9 +118,7 @@ body {
 
 .field::placeholder {
     color: #ffffff;
-    opacity: 0.6;
     text-align: center;
-    transition: opacity 0.4s;
 }
 
 .field:focus {
