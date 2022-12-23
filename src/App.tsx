@@ -5,6 +5,7 @@ import './styles/counter.css';
 import './styles/settings.css';
 import {Counter} from './components/Counter/Counter';
 import {Settings} from './components/Settings/Settings';
+import {Notification} from './components/Notification';
 
 export type ButtonCounterType = 'inc' | 'dec' | 'res'
 
@@ -22,6 +23,11 @@ function App () {
 	const [stepNumber, setStepNumber] = useState(DEFAULT_STEP)
 
 	const [counter, setCounter] = useState(minNumber)
+	const [notification, setNotification] = useState('')
+
+	const notificationMessageSaved = 'Settings have been saved'
+	const notificationMessageDefault = 'Restored default settings'
+	const notificationMessageRandom = 'Applied random settings'
 
 	const buttonCounterOnClickCallback = (type: ButtonCounterType) => {
 		if (type === 'inc') {
@@ -49,10 +55,12 @@ function App () {
 	const defaultSettings = () => {
 		setCounter(DEFAULT_MIN);
 		setStepNumber(DEFAULT_STEP)
+		setNotification(notificationMessageDefault)
 	}
 
 	return (
 		<div className='wrapper'>
+			<Notification></Notification>
 			<div className='container'>
 				<h1 className='heading'>Counter</h1>
 				<div className='wrapper__container'>

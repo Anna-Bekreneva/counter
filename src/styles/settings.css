@@ -28,6 +28,7 @@
 .settings__label {
     margin-right: 16px;
     cursor: pointer;
+    position: relative;
 }
 
 .settings__field {
