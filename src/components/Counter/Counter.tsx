@@ -8,6 +8,8 @@ type CounterPropsType = {
 	maxNumber: number
 	minNumber: number
 	stepNumber: number
+	isRemainedMax: boolean
+	remainedMax: () => void
 	buttonCounterOnClickCallback: (type: ButtonCounterType) => void
 }
 
@@ -16,7 +18,7 @@ export const Counter: React.FC<CounterPropsType> = (props) => {
 	return (
 		<div className='counter'>
 			<h2 className="title">Tablo</h2>
-			<Tablo counter={props.counter} maxNumber={props.maxNumber} minNumber={props.minNumber}></Tablo>
+			<Tablo counter={props.counter} maxNumber={props.maxNumber} minNumber={props.minNumber} stepNumber={props.stepNumber} isRemainedMax={props.isRemainedMax} remainedMax={props.remainedMax}></Tablo>
 			<CounterManagement counter={props.counter} maxNumber={props.maxNumber} minNumber={props.minNumber} stepNumber={props.stepNumber} buttonCounterOnClickCallback={props.buttonCounterOnClickCallback}></CounterManagement>
 		</div>
 	)

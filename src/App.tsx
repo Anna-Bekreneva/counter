@@ -5,7 +5,6 @@ import './styles/counter.css';
 import './styles/settings.css';
 import {Counter} from './components/Counter/Counter';
 import {Settings} from './components/Settings/Settings';
-import {Notification} from './components/Notification';
 
 export type ButtonCounterType = 'inc' | 'dec' | 'res'
 
@@ -23,15 +22,14 @@ function App () {
 	const [stepNumber, setStepNumber] = useState(DEFAULT_STEP)
 
 	const [counter, setCounter] = useState(minNumber)
-	const [notification, setNotification] = useState('')
 
-	const notificationMessageSaved = 'Settings have been saved'
-	const notificationMessageDefault = 'Restored default settings'
-	const notificationMessageRandom = 'Applied random settings'
+	const isRemainedMax = counter !== maxNumber && counter + stepNumber > maxNumber
+
+	const remainedMax = () => setCounter(maxNumber)
 
 	const buttonCounterOnClickCallback = (type: ButtonCounterType) => {
 		if (type === 'inc') {
-			if(counter <= maxNumber - stepNumber && counter >= minNumber) {
+			if (counter <= maxNumber - stepNumber && counter >= minNumber) {
 				setCounter(counter + stepNumber)
 			}
 		}
@@ -55,17 +53,15 @@ function App () {
 	const defaultSettings = () => {
 		setCounter(DEFAULT_MIN);
 		setStepNumber(DEFAULT_STEP)
-		setNotification(notificationMessageDefault)
 	}
 
 	return (
 		<div className='wrapper'>
-			<Notification></Notification>
 			<div className='container'>
 				<h1 className='heading'>Counter</h1>
 				<div className='wrapper__container'>
 					<Settings saveSettings={saveSettings} defaultSettings={defaultSettings} maxNumber={maxNumber} minNumber={minNumber} stepNumber={stepNumber} DEFAULT_MAX={DEFAULT_MAX} DEFAULT_MIN={DEFAULT_MIN} DEFAULT_STEP={DEFAULT_STEP} LIMIT={LIMIT}></Settings>
-					<Counter buttonCounterOnClickCallback={buttonCounterOnClickCallback} counter={counter} maxNumber={maxNumber} minNumber={minNumber} stepNumber={stepNumber}></Counter>
+					<Counter buttonCounterOnClickCallback={buttonCounterOnClickCallback} counter={counter} maxNumber={maxNumber} minNumber={minNumber} stepNumber={stepNumber} isRemainedMax={isRemainedMax} remainedMax={remainedMax}></Counter>
 				</div>
 			</div>
 		</div>

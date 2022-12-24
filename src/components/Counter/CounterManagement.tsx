@@ -12,12 +12,15 @@ type ManagementPropsType = {
 export const CounterManagement: React.FC<ManagementPropsType> = (props) => {
 
 	const onClickHandler = (type: ButtonCounterType) => () => props.buttonCounterOnClickCallback(type)
+	const disabledInc = props.counter + props.stepNumber > props.maxNumber || props.counter === props.maxNumber
+	const disabledDec = props.counter - props.stepNumber < props.minNumber || props.counter === props.minNumber
+	const disabledRes = props.counter - props.stepNumber === props.minNumber || props.counter === props.minNumber
 
 	return (
 		<div className='management'>
-			<button className='management__button button' type='button' onClick={onClickHandler('inc')} disabled={props.counter === props.maxNumber}>inc</button>
-			<button className='management__button button' type='button' onClick={onClickHandler('dec')} disabled={props.counter === props.minNumber}>dec</button>
-			<button className='management__button button' type='button' onClick={onClickHandler('res')} disabled={props.counter <= props.minNumber + props.stepNumber}>res</button>
+			<button className='management__button button' type='button' onClick={onClickHandler('inc')} disabled={disabledInc}>inc</button>
+			<button className='management__button button' type='button' onClick={onClickHandler('dec')} disabled={disabledDec}>dec</button>
+			<button className='management__button button' type='button' onClick={onClickHandler('res')} disabled={disabledRes}>res</button>
 		</div>
 	)
 }

@@ -34,6 +34,8 @@
 .settings__field {
     max-width: 270px;
     width: 100%;
+    display: flex;
+    justify-content: space-between;
 }
 
 .settings__error {
@@ -42,4 +44,11 @@
     position: absolute;
     right: 0;
     bottom: -20px;
+}
+
+.settings__button {
+    padding: 6px;
+    line-height: 1;
+    width: 34px;
+    height: 34px;
 }

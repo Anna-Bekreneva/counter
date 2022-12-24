@@ -35,11 +35,48 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 	const errorMessageGreaterStep = 'The step must be less than the maximum number';
 	const errorMessageZero = 'Number cannot start from zero';
 
-	const onKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
+	// OnKeyDown
+	const allOnKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
 		const symbolsForExcept = [',', '-', '+'];
 		symbolsForExcept.includes(event.key) && event.preventDefault();
+	}
+
+	const maxOnKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
+		allOnKeyDownHandler(event)
+
+		if (newMaxValue === props.DEFAULT_STEP && event.keyCode === 40) {
+			event.preventDefault()
+		}
 	};
 
+	const minOnKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
+		allOnKeyDownHandler(event)
+
+		if (newMinValue === props.DEFAULT_MIN && event.keyCode === 40) {
+			event.preventDefault()
+		}
+	};
+
+	const stepOnKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
+		allOnKeyDownHandler(event)
+
+		if (newStepValue === props.DEFAULT_STEP && event.keyCode === 40) {
+			event.preventDefault()
+		}
+	};
+
+	// PlusOnClick
+	const maxPlusOnClickHandler = () => {
+
+		setNewMaxValue(newMaxValue + 1)
+	}
+
+	// MinusOnClick
+	const maxMinusOnClickHandler = () => {
+		setNewMaxValue(newMaxValue - 1)
+	}
+
+	// OnChange
 	const maxOnChangeHandler = (event: FormEvent<HTMLInputElement>) => {
 		errorAllDefault && setErrorAllDefault(false)
 		const reg = /^[\D0]+|\D/g
@@ -83,6 +120,7 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 		const reg = /^[\D0]+|\D/g
 
 		setNewMinValue(Number(event.currentTarget.value));
+
 		if (reg.test(event.currentTarget.value) && event.currentTarget.value.length > 1) {
 			setErrorMin(errorMessageZero)
 		}
@@ -99,9 +137,10 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 			setErrorMax(errorMessageGreaterMax)
 		}
 
-		if ((Number(event.currentTarget.value) <= newMinValue) && errorMin === errorMessageLessMin && errorMax === errorMessageGreaterMax) {
+		if ((Number(event.currentTarget.value) <= newMaxValue) && errorMin === errorMessageLessMin && errorMax === errorMessageGreaterMax) {
 			setErrorMin('')
 			setErrorMax('')
+			console.log('bla')
 		}
 
 		if ((newMaxValue - newMinValue) % newStepValue !== 0) {
@@ -135,6 +174,7 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 		}
 	};
 
+	// Settings
 	const saveSettings = () => props.saveSettings(newMaxValue, newMinValue, newStepValue)
 
 	const resetError = () => {
@@ -174,14 +214,18 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 					<div className="settings__content">
 						<div className="settings__item">
 							<label className="settings__label" htmlFor="max">Enter max value</label>
-							<input className={errorMax ? 'settings__field field field--error' : 'settings__field' + ' ' + 'field'} id="max" value={newMaxValue} placeholder={newMaxValue.toString()} onChange={maxOnChangeHandler} onKeyDown={onKeyDownHandler} name='max' type="number"/>
+							<div className={errorMax ? 'settings__field field field--error' : 'settings__field field'}>
+								<button className='settings__button button' type='button' onClick={maxMinusOnClickHandler}>-</button>
+								<input id="max" value={newMaxValue} placeholder={newMaxValue.toString()} onChange={maxOnChangeHandler} onKeyDown={maxOnKeyDownHandler} onFocus={() => {console.log('a')}} name='max' type="number"/>
+								<button className='settings__button button' type='button' onClick={maxPlusOnClickHandler}>+</button>
+							</div>
 						</div>
 						{errorMax && <span className="settings__error">{errorMax}</span>}
 					</div>
 					<div className="settings__content">
 						<div className="settings__item">
 							<label className="settings__label" htmlFor="min">Enter min value</label>
-							<input className={errorMin ? 'settings__field field field--error' : 'settings__field' + ' ' + 'field'} id="min" value={newMinValue} onInput={minOnInputHandler} onKeyDown={onKeyDownHandler} name='min' type="number"
+							<input className={errorMin ? 'settings__field field field--error' : 'settings__field field'} id="min" value={newMinValue} onInput={minOnInputHandler} onKeyDown={minOnKeyDownHandler} name='min' type="number"
 							/>
 						</div>
 						{errorMin && <span className="settings__error">{errorMin}</span>}
@@ -192,7 +236,8 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 								<label htmlFor="step">Enter step</label>
 								{warning && <Warning text={warning}></Warning>}
 							</div>
-							<input className={errorStep ? 'settings__field field field--error' : 'settings__field' + ' ' + 'field'} id="step" value={newStepValue} onInput={stepOnChangeHandler} onKeyDown={onKeyDownHandler} name='step' type="number"/>
+							<input className={errorStep ? 'settings__field field field--error' : 'settings__field' +
+								' field'} id="step" value={newStepValue} onInput={stepOnChangeHandler} onKeyDown={stepOnKeyDownHandler} name='step' type="number"/>
 						</div>
 						{errorStep && <span className="settings__error">{errorStep}</span>}
 					</div>
