@@ -14,8 +14,11 @@ function App () {
 	const DEFAULT_MIN = 0
 	const DEFAULT_STEP = 1
 
-	const LIMIT = 30
-	const LIMIT_STEP = LIMIT - DEFAULT_STEP
+	const LIMIT_VALUE = 300
+	// const LIMIT_LENGTH_VALUE
+
+	// let number = 10
+	// console.log(number.toString().split(""))
 
 	const [maxNumber, setMaxNumber] = useState(DEFAULT_MAX)
 	const [minNumber, setMinNumber] = useState(DEFAULT_MIN)
@@ -60,7 +63,7 @@ function App () {
 			<div className='container'>
 				<h1 className='heading'>Counter</h1>
 				<div className='wrapper__container'>
-					<Settings saveSettings={saveSettings} defaultSettings={defaultSettings} maxNumber={maxNumber} minNumber={minNumber} stepNumber={stepNumber} DEFAULT_MAX={DEFAULT_MAX} DEFAULT_MIN={DEFAULT_MIN} DEFAULT_STEP={DEFAULT_STEP} LIMIT={LIMIT}></Settings>
+					<Settings saveSettings={saveSettings} defaultSettings={defaultSettings} maxNumber={maxNumber} minNumber={minNumber} stepNumber={stepNumber} DEFAULT_MAX={DEFAULT_MAX} DEFAULT_MIN={DEFAULT_MIN} DEFAULT_STEP={DEFAULT_STEP} LIMIT_VALUE={LIMIT_VALUE}></Settings>
 					<Counter buttonCounterOnClickCallback={buttonCounterOnClickCallback} counter={counter} maxNumber={maxNumber} minNumber={minNumber} stepNumber={stepNumber} isRemainedMax={isRemainedMax} remainedMax={remainedMax}></Counter>
 				</div>
 			</div>

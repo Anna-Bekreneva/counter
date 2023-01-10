@@ -112,8 +112,8 @@ body {
 }
 
 .field--error {
-    border-color: #ea0038;
-    color: #ea0038;
+    border-color: #d0250f;
+    color: #d0250f;
 }
 
 .field::placeholder {

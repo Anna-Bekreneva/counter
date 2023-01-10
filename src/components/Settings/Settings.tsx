@@ -6,7 +6,7 @@ type SettingsPropsType = {
 	maxNumber: number
 	minNumber: number
 	stepNumber: number
-	LIMIT: number
+	LIMIT_VALUE: number
 	DEFAULT_MAX: number
 	DEFAULT_MIN: number
 	DEFAULT_STEP: number
@@ -18,7 +18,7 @@ export const Settings: React.FC<SettingsPropsType> = (props) => {
 	return (
 		<div className='settings'>
 			<h2 className='title'>Settings</h2>
-			<SettingsForm saveSettings={props.saveSettings} defaultSettings={props.defaultSettings} maxNumber={props.maxNumber} minNumber={props.minNumber}  stepNumber={props.stepNumber} DEFAULT_MAX={props.DEFAULT_MAX} DEFAULT_MIN={props.DEFAULT_MIN} DEFAULT_STEP={props.DEFAULT_STEP} LIMIT={props.LIMIT}></SettingsForm>
+			<SettingsForm saveSettings={props.saveSettings} defaultSettings={props.defaultSettings} maxNumber={props.maxNumber} minNumber={props.minNumber}  stepNumber={props.stepNumber} DEFAULT_MAX={props.DEFAULT_MAX} DEFAULT_MIN={props.DEFAULT_MIN} DEFAULT_STEP={props.DEFAULT_STEP} LIMIT_VALUE={props.LIMIT_VALUE}></SettingsForm>
 		</div>
 	)
 }
