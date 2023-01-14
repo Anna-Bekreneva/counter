@@ -106,13 +106,12 @@ body {
     padding: 10px 20px;
     border-radius: 8px;
     box-shadow: 0 4px 4px rgba(0, 48, 51, 0.25);
-    border: 2px solid transparent;
-    transition: border-color 0.4s, color 0.4s;
+    transition: color 0.4s;
     text-align: center;
 }
 
 .field--error {
-    border-color: #d0250f;
+    box-shadow: 0 0 0 2px #d0250f;
     color: #d0250f;
 }
 
@@ -122,7 +121,7 @@ body {
 }
 
 .field:focus {
-    border-color: #02b9f5;
+    box-shadow: 0 0 0 2px #02b9f5;
     outline: 0;
 }
 

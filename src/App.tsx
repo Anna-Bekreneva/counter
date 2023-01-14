@@ -15,10 +15,6 @@ function App () {
 	const DEFAULT_STEP = 1
 
 	const LIMIT_VALUE = 300
-	// const LIMIT_LENGTH_VALUE
-
-	// let number = 10
-	// console.log(number.toString().split(""))
 
 	const [maxNumber, setMaxNumber] = useState(DEFAULT_MAX)
 	const [minNumber, setMinNumber] = useState(DEFAULT_MIN)

@@ -36,6 +36,13 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
+    position: relative;
+}
+
+.settings__input {
+    text-align: center;
+    padding: 0 30px;
+    width: 100%;
 }
 
 .settings__error {
@@ -47,8 +54,32 @@
 }
 
 .settings__button {
+    position: absolute;
     padding: 6px;
     line-height: 1;
-    width: 34px;
-    height: 34px;
+    width: 40px;
+    min-height: 40px;
+    top: 0;
+    bottom: 0;
+    box-shadow: none;
+}
+
+.settings__button:hover {
+    background-color: #206bb8;
+    transform: translate(0);
+}
+
+.setting__button:focus,
+.settings__button--active {
+    background-color: #0d4450;
+    color: #ffffff;
+    border-color: #02b9f5;
+}
+
+.settings__button--minus {
+    left: 0;
+}
+
+.settings__button--plus {
+    right: 0;
 }
