@@ -13,7 +13,6 @@ function App () {
 	const DEFAULT_MAX = 5
 	const DEFAULT_MIN = 0
 	const DEFAULT_STEP = 1
-
 	const LIMIT_VALUE = 300
 
 	const [maxNumber, setMaxNumber] = useState(DEFAULT_MAX)

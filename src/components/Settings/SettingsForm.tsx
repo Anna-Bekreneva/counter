@@ -1,6 +1,7 @@
 import React, {ChangeEvent, FormEvent, KeyboardEvent, LegacyRef, useEffect, useState} from 'react';
 import {SettingsManagement} from './SettingsManagement';
 import {Warning} from '../Warning';
+import {SettingsItem} from './SettingsItem';
 
 type SettingsFormPropsType = {
 	maxNumber: number
@@ -40,16 +41,19 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 	const stepRef: LegacyRef<HTMLInputElement> | undefined = React.createRef()
 
 	const [maxButtonDopClass, setMaxButtonDopClass] = useState('')
-	const [whichButtonDopClass, setWhichButtonDopClass] = useState<'plus' | 'minus' | null>(null)
+	const [minButtonDopClass, setMinButtonDopClass] = useState('')
+	const [whichButtonMaxDopClass, setWhichButtonMaxDopClass] = useState<'plus' | 'minus' | null>(null)
+	const [whichButtonMinDopClass, setWhichButtonMinDopClass] = useState<'plus' | 'minus' | null>(null)
 
 	const resetButtonDopClass = () => {
 		setMaxButtonDopClass('')
-		setWhichButtonDopClass(null)
+		setWhichButtonMaxDopClass(null)
+		setWhichButtonMinDopClass(null)
 	}
 
 	// OnKeyDown
 	const allOnKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
-		const symbolsForExcept = [',', '-', '+'];
+		const symbolsForExcept = [',', '-', '+', '.'];
 		symbolsForExcept.includes(event.key) && event.preventDefault();
 	}
 
@@ -72,19 +76,39 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 		}
 
 		if (event.keyCode === 38) {
-			setWhichButtonDopClass('plus')
+			setWhichButtonMaxDopClass('plus')
 		}
 
 		if (event.keyCode === 40) {
-			setWhichButtonDopClass('minus')
+			setWhichButtonMaxDopClass('minus')
 		}
 	};
 
 	const minOnKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
 		allOnKeyDownHandler(event)
 
-		if (newMinValue === props.DEFAULT_MIN && event.keyCode === 40) {
+		// down - 40, up - 38
+
+		if ((newMinValue === props.DEFAULT_MIN && event.keyCode === 40) || (event.keyCode === 38 && newMinValue === props.LIMIT_VALUE)) {
 			event.preventDefault()
+		}
+
+		if ((event.keyCode === 40 && newMinValue !== props.DEFAULT_MIN) || (event.keyCode === 38 && newMaxValue !== props.LIMIT_VALUE)) {
+			setMinButtonDopClass('settings__button--active')
+		} else {
+			resetButtonDopClass()
+		}
+
+		if (newMinValue === props.DEFAULT_MIN) {
+			resetButtonDopClass()
+		}
+
+		if (event.keyCode === 38) {
+			setWhichButtonMinDopClass('plus')
+		}
+
+		if (event.keyCode === 40) {
+			setWhichButtonMinDopClass('minus')
 		}
 	};
 
@@ -102,6 +126,11 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 		maxRef.current && maxRef.current.focus()
 	}
 
+	const minPlusOnClickHandler = () => {
+		setNewMinValue((actual) => actual + 1)
+		minRef.current && minRef.current.focus()
+	}
+
 	// Click on minus/plus button for max value
 	useEffect(() => {
 		if (newMaxValue <= newMinValue) {
@@ -109,7 +138,7 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 			setErrorMax(errorMessageGreaterMax)
 		}
 
-		if ((newMaxValue >= newMinValue) && errorMin === errorMessageLessMin && errorMax === errorMessageGreaterMax) {
+		if ((newMaxValue > newMinValue) && errorMin === errorMessageLessMin && errorMax === errorMessageGreaterMax) {
 			setErrorMin('')
 			setErrorMax('')
 		}
@@ -117,10 +146,13 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 		if ((newMaxValue - newMinValue) % newStepValue !== 0) {
 			setWarning(warningMessage)
 		}
-	}, [newMaxValue])
+	}, [newMaxValue, newMinValue])
 
 	const maxMinusButtonDisabled = newMaxValue < props.DEFAULT_MIN + props.DEFAULT_STEP + props.DEFAULT_STEP
 	const maxPLusButtonDisabled = newMaxValue === props.LIMIT_VALUE
+
+	const minMinusButtonDisabled = newMinValue === props.DEFAULT_MIN
+	const minPLusButtonDisabled = newMinValue === props.LIMIT_VALUE - 1
 
 	// MinusOnClick
 	const maxMinusOnClickHandler = () => {
@@ -128,17 +160,18 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 		maxRef.current && maxRef.current.focus()
 	}
 
+	const minMinusOnClickHandler = () => {
+		!minMinusButtonDisabled && setNewMinValue((actual) => actual - 1);
+		minRef.current && minRef.current.focus()
+	}
+
 	// OnChange
-	//FormEvent<HTMLInputElement>
 	const maxOnChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
 		errorAllDefault && setErrorAllDefault(false)
-		const reg = /^[\D0]+|\D/g
 		errorMax && setErrorMax('')
 		warning && setWarning('')
 
-		if (reg.test(event.currentTarget.value)) {
-			setErrorMax(errorMessageZero)
-		}
+		event.currentTarget.value = event.currentTarget.value.replace(/^0/, '');
 
 		if (Number(event.currentTarget.value) > props.LIMIT_VALUE) {
 			setErrorMax(errorMessageLength)
@@ -155,7 +188,7 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 			setErrorMax(errorMessageGreaterMax)
 		}
 
-		if ((Number(event.currentTarget.value) >= newMinValue) && errorMin === errorMessageLessMin && errorMax === errorMessageGreaterMax) {
+		if ((Number(event.currentTarget.value) > newMinValue) && errorMin === errorMessageLessMin && errorMax === errorMessageGreaterMax) {
 			setErrorMin('')
 			setErrorMax('')
 		}
@@ -165,25 +198,21 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 		}
 	};
 
-	const minOnInputHandler = (event: FormEvent<HTMLInputElement>) => {
+	const minOnChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
 		errorAllDefault && setErrorAllDefault(false)
 		errorMin && setErrorMin('')
 		warning && setWarning('')
-		setNewMinValue(Number(event.currentTarget.value));
 
-		const reg = /^[\D0]+|\D/g
+		event.currentTarget.value = event.currentTarget.value.replace(/^0/, '');
 
-		setNewMinValue(Number(event.currentTarget.value));
+		if (Number(event.currentTarget.value) > props.LIMIT_VALUE) {
+			setErrorMin(errorMessageLength)
 
-		if (reg.test(event.currentTarget.value) && event.currentTarget.value.length > 1) {
-			setErrorMin(errorMessageZero)
-		}
-
-		if (event.currentTarget.value.length > 6) {
-			setErrorMin(errorMessageLength);
-			setNewMinValue(newMinValue)
+			if (Array.from(event.currentTarget.value).length <= String(props.LIMIT_VALUE).split("").length) {
+				setNewMinValue(Number(event.currentTarget.value))
+			}
 		} else {
-			setNewMinValue(Number(event.currentTarget.value));
+			setNewMinValue(Number(event.currentTarget.value))
 		}
 
 		if (Number(event.currentTarget.value) >= newMaxValue) {
@@ -191,7 +220,7 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 			setErrorMax(errorMessageGreaterMax)
 		}
 
-		if ((Number(event.currentTarget.value) <= newMaxValue) && errorMin === errorMessageLessMin && errorMax === errorMessageGreaterMax) {
+		if ((Number(event.currentTarget.value) < newMaxValue) && errorMin === errorMessageLessMin && errorMax === errorMessageGreaterMax) {
 			setErrorMin('')
 			setErrorMax('')
 		}
@@ -264,24 +293,40 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 		<form className="settings__form" action={'#'}>
 			<div className="tablo">
 				<div className="settings__items">
-					<div className="settings__content">
-						<div className="settings__item">
-							<label className="settings__label" htmlFor="max">Enter max value</label>
-							<div className={errorMax ? 'settings__field field field--error' : 'settings__field field'}>
-								<button className={whichButtonDopClass === 'minus' ? `settings__button settings__button--minus button ${maxButtonDopClass}` : 'settings__button settings__button--minus button'} type='button' onClick={maxMinusOnClickHandler} disabled={maxMinusButtonDisabled}>-</button>
-								<input className='settings__input' id="max" value={newMaxValue ? newMaxValue : 1} onChange={maxOnChangeHandler} onKeyDown={maxOnKeyDownHandler} ref={maxRef} onBlur={resetButtonDopClass} name='max' type="number"/>
-								<button className={whichButtonDopClass === 'plus' ? `settings__button settings__button--plus button ${maxButtonDopClass}` : 'settings__button settings__button--plus button'} type='button' onClick={maxPlusOnClickHandler} disabled={maxPLusButtonDisabled}>+</button>
-							</div>
-						</div>
-						{errorMax && <span className="settings__error">{errorMax}</span>}
-					</div>
-					<div className="settings__content">
-						<div className="settings__item">
-							<label className="settings__label" htmlFor="min">Enter min value</label>
-							<input className={errorMin ? 'settings__field field field--error' : 'settings__field field'} id="min" value={newMinValue} onInput={minOnInputHandler} onKeyDown={minOnKeyDownHandler} name='min' type="number"/>
-						</div>
-						{errorMin && <span className="settings__error">{errorMin}</span>}
-					</div>
+					<SettingsItem
+						labelText={"Enter max value"}
+						inputId={"max"}
+						error={errorMax}
+						newValue={newMaxValue}
+						changeHandler={maxOnChangeHandler}
+						onKeyDown={maxOnKeyDownHandler}
+						link={maxRef}
+						resetButtonDopClass={resetButtonDopClass}
+						whichButtonDopClass={whichButtonMaxDopClass}
+						buttonDopClass={maxButtonDopClass}
+						minusOnClick={maxMinusOnClickHandler}
+						minusButtonDisabled={maxMinusButtonDisabled}
+						plusOnClick={maxPlusOnClickHandler}
+						maxButtonDisabled={maxPLusButtonDisabled}
+						valueForInput={newMaxValue ? newMaxValue : 1}
+					/>
+					<SettingsItem
+						labelText={"Enter min value"}
+						inputId={"min"}
+						error={errorMin}
+						newValue={newMinValue}
+						changeHandler={minOnChangeHandler}
+						onKeyDown={minOnKeyDownHandler}
+						link={minRef}
+						resetButtonDopClass={resetButtonDopClass}
+						whichButtonDopClass={whichButtonMinDopClass}
+						buttonDopClass={minButtonDopClass}
+						minusOnClick={minMinusOnClickHandler}
+						minusButtonDisabled={minMinusButtonDisabled}
+						plusOnClick={minPlusOnClickHandler}
+						maxButtonDisabled={minPLusButtonDisabled}
+						valueForInput={newMinValue}
+					/>
 					<div className="settings__content">
 						<div className="settings__item">
 							<div className="settings__label">
