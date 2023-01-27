@@ -1,4 +1,5 @@
 import React, {ChangeEvent, KeyboardEvent} from 'react';
+import {Warning} from '../Warning';
 
 type settingsItemPropsType = {
 	labelText: string
@@ -16,6 +17,7 @@ type settingsItemPropsType = {
 	minusButtonDisabled: boolean
 	maxButtonDisabled: boolean
 	valueForInput: number
+	warning?: string
 }
 
 export const SettingsItem: React.FC<settingsItemPropsType> = (props) => {
@@ -23,6 +25,7 @@ export const SettingsItem: React.FC<settingsItemPropsType> = (props) => {
 		<div className="settings__content">
 			<div className="settings__item">
 				<label className="settings__label" htmlFor={props.inputId}>{props.labelText}</label>
+				{props.warning && <Warning text={props.warning}></Warning>}
 				<div className={props.error ? 'settings__field field field--error' : 'settings__field field'}>
 					<button className={props.whichButtonDopClass === 'minus' ? `settings__button settings__button--minus button ${props.buttonDopClass}` : 'settings__button settings__button--minus button'} type="button" onClick={props.minusOnClick} disabled={props.minusButtonDisabled}>-</button>
 					<input className="settings__input" id={props.inputId} value={props.valueForInput} onChange={props.changeHandler} onKeyDown={props.onKeyDown} ref={props.link} onBlur={props.resetButtonDopClass} name="max" type="number"/>

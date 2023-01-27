@@ -1,7 +1,7 @@
-import React, {ChangeEvent, FormEvent, KeyboardEvent, LegacyRef, useEffect, useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, LegacyRef, useEffect, useState} from 'react';
 import {SettingsManagement} from './SettingsManagement';
-import {Warning} from '../Warning';
 import {SettingsItem} from './SettingsItem';
+import {Warning} from '../Warning';
 
 type SettingsFormPropsType = {
 	maxNumber: number
@@ -42,13 +42,18 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 
 	const [maxButtonDopClass, setMaxButtonDopClass] = useState('')
 	const [minButtonDopClass, setMinButtonDopClass] = useState('')
+	const [stepButtonDopClass, setStepButtonDopClass] = useState('')
 	const [whichButtonMaxDopClass, setWhichButtonMaxDopClass] = useState<'plus' | 'minus' | null>(null)
 	const [whichButtonMinDopClass, setWhichButtonMinDopClass] = useState<'plus' | 'minus' | null>(null)
+	const [whichButtonStepDopClass, setWhichButtonStepDopClass] = useState<'plus' | 'minus' | null>(null)
 
 	const resetButtonDopClass = () => {
 		setMaxButtonDopClass('')
+		setMinButtonDopClass('')
+		setStepButtonDopClass('')
 		setWhichButtonMaxDopClass(null)
 		setWhichButtonMinDopClass(null)
+		setWhichButtonStepDopClass(null)
 	}
 
 	// OnKeyDown
@@ -61,13 +66,13 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 		allOnKeyDownHandler(event)
 		// down - 40, up - 38
 
-		if ((event.keyCode === 40 && newMaxValue !== props.DEFAULT_STEP) || (event.keyCode === 38 && newMaxValue !== props.LIMIT_VALUE)) {
+		if ((newMaxValue !== props.DEFAULT_STEP && event.keyCode === 40) || (newMaxValue !== props.LIMIT_VALUE && event.keyCode === 38)) {
 			setMaxButtonDopClass('settings__button--active')
 		} else {
 			resetButtonDopClass()
 		}
 
-		if ((event.keyCode === 40 && newMaxValue === props.DEFAULT_STEP) || (event.keyCode === 38 && newMaxValue === props.LIMIT_VALUE)) {
+		if ((newMaxValue === props.DEFAULT_STEP && event.keyCode === 40) || (newMaxValue === props.LIMIT_VALUE && event.keyCode === 38)) {
 			event.preventDefault()
 		}
 
@@ -89,17 +94,17 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 
 		// down - 40, up - 38
 
-		if ((newMinValue === props.DEFAULT_MIN && event.keyCode === 40) || (event.keyCode === 38 && newMinValue === props.LIMIT_VALUE)) {
+		if ((newMinValue === props.DEFAULT_MIN && event.keyCode === 40) || (newMinValue === props.LIMIT_VALUE && event.keyCode === 38)) {
 			event.preventDefault()
 		}
 
-		if ((event.keyCode === 40 && newMinValue !== props.DEFAULT_MIN) || (event.keyCode === 38 && newMaxValue !== props.LIMIT_VALUE)) {
+		if ((newMinValue !== props.DEFAULT_MIN && event.keyCode === 40) || (newMinValue !== props.LIMIT_VALUE && event.keyCode === 38)) {
 			setMinButtonDopClass('settings__button--active')
 		} else {
 			resetButtonDopClass()
 		}
 
-		if (newMinValue === props.DEFAULT_MIN) {
+		if (newMinValue === props.LIMIT_VALUE + 1 || newMinValue === props.DEFAULT_MIN + 1) {
 			resetButtonDopClass()
 		}
 
@@ -115,8 +120,31 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 	const stepOnKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
 		allOnKeyDownHandler(event)
 
+		// down - 40, up - 38
 		if (newStepValue === props.DEFAULT_STEP && event.keyCode === 40) {
 			event.preventDefault()
+		}
+
+		if ((newStepValue === props.DEFAULT_MIN && event.keyCode === 40) || (event.keyCode === 38 && newStepValue === props.LIMIT_VALUE)) {
+			event.preventDefault()
+		}
+
+		if ((event.keyCode === 40 && newMinValue !== props.DEFAULT_MIN) || (event.keyCode === 38 && newMaxValue !== props.LIMIT_VALUE)) {
+			setStepButtonDopClass('settings__button--active')
+		} else {
+			resetButtonDopClass()
+		}
+
+		if (newStepValue === props.DEFAULT_MIN) {
+			resetButtonDopClass()
+		}
+
+		if (event.keyCode === 38) {
+			setWhichButtonStepDopClass('plus')
+		}
+
+		if (event.keyCode === 40) {
+			setWhichButtonStepDopClass('minus')
 		}
 	};
 
@@ -129,6 +157,11 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 	const minPlusOnClickHandler = () => {
 		setNewMinValue((actual) => actual + 1)
 		minRef.current && minRef.current.focus()
+	}
+
+	const stepPlusOnClickHandler = () => {
+		setNewStepValue((actual) => actual + 1)
+		stepRef.current && stepRef.current.focus()
 	}
 
 	// Click on minus/plus button for max value
@@ -152,7 +185,11 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 	const maxPLusButtonDisabled = newMaxValue === props.LIMIT_VALUE
 
 	const minMinusButtonDisabled = newMinValue === props.DEFAULT_MIN
-	const minPLusButtonDisabled = newMinValue === props.LIMIT_VALUE - 1
+	const minPLusButtonDisabled = newMinValue === props.LIMIT_VALUE
+	console.log(minPLusButtonDisabled)
+
+	const stepMinusButtonDisabled = newStepValue === props.DEFAULT_MIN + 1
+	const stepPLusButtonDisabled = newStepValue === props.LIMIT_VALUE - 1
 
 	// MinusOnClick
 	const maxMinusOnClickHandler = () => {
@@ -164,6 +201,12 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 		!minMinusButtonDisabled && setNewMinValue((actual) => actual - 1);
 		minRef.current && minRef.current.focus()
 	}
+
+	const stepMinusOnClickHandler = () => {
+		!stepMinusButtonDisabled && setNewStepValue((actual) => actual - 1);
+		stepRef.current && stepRef.current.focus()
+	}
+
 
 	// OnChange
 	const maxOnChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
@@ -235,6 +278,7 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 		const reg = /^[\D0]+|\D/g
 		errorStep && setErrorStep('');
 		warning && setWarning('')
+
 		setNewStepValue(Number(event.currentTarget.value));
 
 		if (Number(event.currentTarget.value) >= newMaxValue) {
@@ -254,6 +298,32 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 		if ((newMaxValue - newMinValue) % Number(event.currentTarget.value) !== 0) {
 			setWarning(warningMessage)
 		}
+
+		//////////////
+
+		// if (Number(event.currentTarget.value) > props.LIMIT_VALUE) {
+		// 	setErrorMin(errorMessageLength)
+		//
+		// 	if (Array.from(event.currentTarget.value).length <= String(props.LIMIT_VALUE).split("").length) {
+		// 		setNewMinValue(Number(event.currentTarget.value))
+		// 	}
+		// } else {
+		// 	setNewMinValue(Number(event.currentTarget.value))
+		// }
+		//
+		// if (Number(event.currentTarget.value) >= newMaxValue) {
+		// 	setErrorMin(errorMessageLessMin)
+		// 	setErrorMax(errorMessageGreaterMax)
+		// }
+		//
+		// if ((Number(event.currentTarget.value) < newMaxValue) && errorMin === errorMessageLessMin && errorMax === errorMessageGreaterMax) {
+		// 	setErrorMin('')
+		// 	setErrorMax('')
+		// }
+		//
+		// if ((newMaxValue - newMinValue) % newStepValue !== 0) {
+		// 	setWarning(warningMessage)
+		// }
 	};
 
 	// Settings
@@ -327,17 +397,26 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 						maxButtonDisabled={minPLusButtonDisabled}
 						valueForInput={newMinValue}
 					/>
-					<div className="settings__content">
-						<div className="settings__item">
-							<div className="settings__label">
-								<label htmlFor="step">Enter step</label>
-								{warning && <Warning text={warning}></Warning>}
-							</div>
-							<input className={errorStep ? 'settings__field field field--error' : 'settings__field' + ' field'} id="step" value={newStepValue} onInput={stepOnChangeHandler} onKeyDown={stepOnKeyDownHandler} name='step' type="number"/>
-						</div>
-						{errorStep && <span className="settings__error">{errorStep}</span>}
-					</div>
+					<SettingsItem
+						labelText={"Enter step"}
+						inputId={"step"}
+						error={errorStep}
+						newValue={newStepValue}
+						changeHandler={stepOnChangeHandler}
+						onKeyDown={stepOnKeyDownHandler}
+						link={stepRef}
+						resetButtonDopClass={resetButtonDopClass}
+						whichButtonDopClass={whichButtonStepDopClass}
+						buttonDopClass={stepButtonDopClass}
+						minusOnClick={stepMinusOnClickHandler}
+						minusButtonDisabled={stepMinusButtonDisabled}
+						plusOnClick={stepPlusOnClickHandler}
+						maxButtonDisabled={stepPLusButtonDisabled}
+						valueForInput={newStepValue}
+						warning={warning}
+					/>
 				</div>
+
 			</div>
 			<SettingsManagement saveSettings={saveSettings} defaultSettings={defaultSettings} randomSettings={randomSettings} errorAll={errorAll}></SettingsManagement>
 		</form>
