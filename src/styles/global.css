@@ -112,6 +112,9 @@ body {
 
 .field--error {
     box-shadow: 0 0 0 2px #d0250f;
+}
+
+.field--error .settings__input {
     color: #d0250f;
 }
 

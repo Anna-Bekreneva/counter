@@ -29,12 +29,12 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 
 	const errorAll = errorAllDefault || errorStep ? true : false || errorMax ? true : false || errorMin ? true : false
 
-	const warningMessage = 'With this step it is impossible to get the maximum number'
+	const warningMessage = 'With this step it is impossible to get the max value'
 	const errorMessageGreaterMax = 'This value must be greater than the min value';
 	const errorMessageLessMin = 'This value must be less than the max value';
 	const errorMessageLength = 'It\'s number very big';
 	const errorMessageGreaterStep = 'The step must be less than the maximum number';
-	const errorMessageZero = 'Number cannot start from zero';
+	const errorMessageGreaterMaxForStep = 'The max value must be greater than the step';
 
 	const maxRef: LegacyRef<HTMLInputElement> | undefined = React.createRef()
 	const minRef: LegacyRef<HTMLInputElement> | undefined = React.createRef()
@@ -135,7 +135,7 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 			resetButtonDopClass()
 		}
 
-		if (newStepValue === props.DEFAULT_MIN) {
+		if (newStepValue === props.DEFAULT_MIN + 1) {
 			resetButtonDopClass()
 		}
 
@@ -186,7 +186,6 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 
 	const minMinusButtonDisabled = newMinValue === props.DEFAULT_MIN
 	const minPLusButtonDisabled = newMinValue === props.LIMIT_VALUE
-	console.log(minPLusButtonDisabled)
 
 	const stepMinusButtonDisabled = newStepValue === props.DEFAULT_MIN + 1
 	const stepPLusButtonDisabled = newStepValue === props.LIMIT_VALUE - 1
@@ -237,7 +236,7 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 		}
 
 		if ((newMaxValue - newMinValue) % newStepValue !== 0) {
-			setWarning(warningMessage)
+			warning && setWarning('')
 		}
 	};
 
@@ -268,25 +267,22 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 			setErrorMax('')
 		}
 
-		if ((newMaxValue - newMinValue) % newStepValue !== 0) {
-			setWarning(warningMessage)
+		if (((newMaxValue - newMinValue) % newStepValue !== 0)) {
+			warning && setWarning('')
 		}
 	};
 
 	const stepOnChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
 		errorAllDefault && setErrorAllDefault(false)
-		const reg = /^[\D0]+|\D/g
-		errorStep && setErrorStep('');
+		errorMax && setErrorMax('')
 		warning && setWarning('')
 
-		setNewStepValue(Number(event.currentTarget.value));
+		event.currentTarget.value = event.currentTarget.value.replace(/^0/, '');
 
 		if (Number(event.currentTarget.value) >= newMaxValue) {
 			setErrorStep(errorMessageGreaterStep)
-		}
-
-		if (reg.test(event.currentTarget.value) && event.currentTarget.value.length > 1 || event.currentTarget.value === '') {
-			setErrorStep(errorMessageZero)
+		} else {
+			setErrorStep('')
 		}
 
 		if (event.currentTarget.value.length > 6) {
@@ -295,36 +291,14 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 			setNewStepValue(Number(event.currentTarget.value));
 		}
 
-		if ((newMaxValue - newMinValue) % Number(event.currentTarget.value) !== 0) {
+		if (((newMaxValue - newMinValue) % Number(event.currentTarget.value) !== 0) && Number(event.currentTarget.value) <= newMaxValue) {
 			setWarning(warningMessage)
 		}
-
-		//////////////
-
-		// if (Number(event.currentTarget.value) > props.LIMIT_VALUE) {
-		// 	setErrorMin(errorMessageLength)
-		//
-		// 	if (Array.from(event.currentTarget.value).length <= String(props.LIMIT_VALUE).split("").length) {
-		// 		setNewMinValue(Number(event.currentTarget.value))
-		// 	}
-		// } else {
-		// 	setNewMinValue(Number(event.currentTarget.value))
-		// }
-		//
-		// if (Number(event.currentTarget.value) >= newMaxValue) {
-		// 	setErrorMin(errorMessageLessMin)
-		// 	setErrorMax(errorMessageGreaterMax)
-		// }
-		//
-		// if ((Number(event.currentTarget.value) < newMaxValue) && errorMin === errorMessageLessMin && errorMax === errorMessageGreaterMax) {
-		// 	setErrorMin('')
-		// 	setErrorMax('')
-		// }
-		//
-		// if ((newMaxValue - newMinValue) % newStepValue !== 0) {
-		// 	setWarning(warningMessage)
-		// }
 	};
+
+	if (newMaxValue <= newMinValue) {
+		warning && setWarning('')
+	}
 
 	// Settings
 	const saveSettings = () => props.saveSettings(newMaxValue, newMinValue, newStepValue)
