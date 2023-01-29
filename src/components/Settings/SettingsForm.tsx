@@ -51,6 +51,7 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 		setMaxButtonDopClass('')
 		setMinButtonDopClass('')
 		setStepButtonDopClass('')
+
 		setWhichButtonMaxDopClass(null)
 		setWhichButtonMinDopClass(null)
 		setWhichButtonStepDopClass(null)
@@ -129,13 +130,9 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 			event.preventDefault()
 		}
 
-		if ((event.keyCode === 40 && newMinValue !== props.DEFAULT_MIN) || (event.keyCode === 38 && newMaxValue !== props.LIMIT_VALUE)) {
+		if ((event.keyCode === 40 && newStepValue > props.DEFAULT_MIN + 2) || (event.keyCode === 38 && newStepValue !== props.LIMIT_VALUE)) {
 			setStepButtonDopClass('settings__button--active')
 		} else {
-			resetButtonDopClass()
-		}
-
-		if (newStepValue === props.DEFAULT_MIN + 1) {
 			resetButtonDopClass()
 		}
 
@@ -164,23 +161,6 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 		stepRef.current && stepRef.current.focus()
 	}
 
-	// Click on minus/plus button for max value
-	useEffect(() => {
-		if (newMaxValue <= newMinValue) {
-			setErrorMin(errorMessageLessMin)
-			setErrorMax(errorMessageGreaterMax)
-		}
-
-		if ((newMaxValue > newMinValue) && errorMin === errorMessageLessMin && errorMax === errorMessageGreaterMax) {
-			setErrorMin('')
-			setErrorMax('')
-		}
-
-		if ((newMaxValue - newMinValue) % newStepValue !== 0) {
-			setWarning(warningMessage)
-		}
-	}, [newMaxValue, newMinValue])
-
 	const maxMinusButtonDisabled = newMaxValue < props.DEFAULT_MIN + props.DEFAULT_STEP + props.DEFAULT_STEP
 	const maxPLusButtonDisabled = newMaxValue === props.LIMIT_VALUE
 
@@ -206,12 +186,42 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 		stepRef.current && stepRef.current.focus()
 	}
 
+	useEffect(() => {
+		if (newMaxValue < newStepValue) {
+			setErrorMax(errorMessageGreaterMaxForStep)
+			setErrorStep(errorMessageGreaterStep)
+		} else {
+			errorMax && setErrorMax('')
+			errorStep && setErrorStep('')
+		}
+	}, [newMaxValue, newStepValue])
+
+	useEffect(() => {
+		if (newMinValue >= newMaxValue) {
+			setErrorMin(errorMessageLessMin)
+			setErrorMax(errorMessageGreaterMax)
+		} else {
+			errorMin && setErrorMin('')
+			errorMax && setErrorMax('')
+		}
+	}, [newMaxValue, newMinValue])
+
+	useEffect(() => {
+		if (((newMaxValue - newMinValue) % newStepValue !== 0)) {
+			if (newStepValue < newMaxValue) {
+				setWarning(warningMessage)
+			} else {
+				warning && setWarning('')
+			}
+		} else {
+			warning && setWarning('')
+		}
+	}, [newMaxValue, newMinValue, newStepValue])
+
 
 	// OnChange
 	const maxOnChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
 		errorAllDefault && setErrorAllDefault(false)
-		errorMax && setErrorMax('')
-		warning && setWarning('')
 
 		event.currentTarget.value = event.currentTarget.value.replace(/^0/, '');
 
@@ -224,26 +234,10 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 		} else {
 			setNewMaxValue(Number(event.currentTarget.value))
 		}
-
-		if (Number(event.currentTarget.value) <= newMinValue) {
-			setErrorMin(errorMessageLessMin)
-			setErrorMax(errorMessageGreaterMax)
-		}
-
-		if ((Number(event.currentTarget.value) > newMinValue) && errorMin === errorMessageLessMin && errorMax === errorMessageGreaterMax) {
-			setErrorMin('')
-			setErrorMax('')
-		}
-
-		if ((newMaxValue - newMinValue) % newStepValue !== 0) {
-			warning && setWarning('')
-		}
 	};
 
 	const minOnChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
 		errorAllDefault && setErrorAllDefault(false)
-		errorMin && setErrorMin('')
-		warning && setWarning('')
 
 		event.currentTarget.value = event.currentTarget.value.replace(/^0/, '');
 
@@ -256,49 +250,19 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 		} else {
 			setNewMinValue(Number(event.currentTarget.value))
 		}
-
-		if (Number(event.currentTarget.value) >= newMaxValue) {
-			setErrorMin(errorMessageLessMin)
-			setErrorMax(errorMessageGreaterMax)
-		}
-
-		if ((Number(event.currentTarget.value) < newMaxValue) && errorMin === errorMessageLessMin && errorMax === errorMessageGreaterMax) {
-			setErrorMin('')
-			setErrorMax('')
-		}
-
-		if (((newMaxValue - newMinValue) % newStepValue !== 0)) {
-			warning && setWarning('')
-		}
 	};
 
 	const stepOnChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
 		errorAllDefault && setErrorAllDefault(false)
-		errorMax && setErrorMax('')
-		warning && setWarning('')
 
 		event.currentTarget.value = event.currentTarget.value.replace(/^0/, '');
 
-		if (Number(event.currentTarget.value) >= newMaxValue) {
-			setErrorStep(errorMessageGreaterStep)
-		} else {
-			setErrorStep('')
-		}
-
-		if (event.currentTarget.value.length > 6) {
+		if (event.currentTarget.value.length > 3) {
 			setNewStepValue(newStepValue)
 		} else {
 			setNewStepValue(Number(event.currentTarget.value));
 		}
-
-		if (((newMaxValue - newMinValue) % Number(event.currentTarget.value) !== 0) && Number(event.currentTarget.value) <= newMaxValue) {
-			setWarning(warningMessage)
-		}
 	};
-
-	if (newMaxValue <= newMinValue) {
-		warning && setWarning('')
-	}
 
 	// Settings
 	const saveSettings = () => props.saveSettings(newMaxValue, newMinValue, newStepValue)

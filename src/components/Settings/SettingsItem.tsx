@@ -1,4 +1,4 @@
-import React, {ChangeEvent, KeyboardEvent} from 'react';
+import React, {ChangeEvent, KeyboardEvent, WheelEvent} from 'react';
 import {Warning} from '../Warning';
 
 type settingsItemPropsType = {
@@ -21,6 +21,7 @@ type settingsItemPropsType = {
 }
 
 export const SettingsItem: React.FC<settingsItemPropsType> = (props) => {
+
 	return (
 		<div className="settings__content">
 			<div className="settings__item">

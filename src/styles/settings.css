@@ -83,3 +83,11 @@
 .settings__button--plus {
     right: 0;
 }
+
+.settings__input {
+    -moz-appearance: textfield;
+}
+
+.settings__input::-webkit-inner-spin-button {
+    display: none;
+}
