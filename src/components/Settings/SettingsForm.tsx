@@ -25,9 +25,6 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 	const [errorMax, setErrorMax] = useState('');
 	const [errorMin, setErrorMin] = useState('');
 	const [errorStep, setErrorStep] = useState('');
-	const [errorAllDefault, setErrorAllDefault] = useState(true)
-
-	const errorAll = errorAllDefault || errorStep ? true : false || errorMax ? true : false || errorMin ? true : false
 
 	const warningMessage = 'With this step it is impossible to get the max value'
 	const errorMessageGreaterMax = 'This value must be greater than the min value';
@@ -46,6 +43,9 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 	const [whichButtonMaxDopClass, setWhichButtonMaxDopClass] = useState<'plus' | 'minus' | null>(null)
 	const [whichButtonMinDopClass, setWhichButtonMinDopClass] = useState<'plus' | 'minus' | null>(null)
 	const [whichButtonStepDopClass, setWhichButtonStepDopClass] = useState<'plus' | 'minus' | null>(null)
+
+	const [saveDisabled, setSaveDisabled] = useState(true)
+	const [defaultDisabled, setDefaultDisabled] = useState(true)
 
 	const resetButtonDopClass = () => {
 		setMaxButtonDopClass('')
@@ -187,43 +187,37 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 	}
 
 	useEffect(() => {
+		errorMax && setErrorMax('')
+		errorStep && setErrorStep('')
+		errorMin && setErrorMin('')
+		warning && setWarning('')
+
+		if (((newMaxValue - newMinValue) % newStepValue !== 0) && (newMaxValue >= newStepValue) && newMinValue < newMaxValue) {
+			setWarning(warningMessage)
+		}
+
 		if (newMaxValue < newStepValue) {
 			setErrorMax(errorMessageGreaterMaxForStep)
 			setErrorStep(errorMessageGreaterStep)
-		} else {
-			errorMax && setErrorMax('')
-			errorStep && setErrorStep('')
+			setSaveDisabled(true)
 		}
-	}, [newMaxValue, newStepValue])
 
-	useEffect(() => {
 		if (newMinValue >= newMaxValue) {
 			setErrorMin(errorMessageLessMin)
 			setErrorMax(errorMessageGreaterMax)
-		} else {
-			errorMin && setErrorMin('')
-			errorMax && setErrorMax('')
+			setSaveDisabled(true)
 		}
-	}, [newMaxValue, newMinValue])
+	}, [newMinValue, newMaxValue, newStepValue])
 
-	useEffect(() => {
-		if (((newMaxValue - newMinValue) % newStepValue !== 0)) {
-			if (newStepValue < newMaxValue) {
-				setWarning(warningMessage)
-			} else {
-				warning && setWarning('')
-			}
-		} else {
-			warning && setWarning('')
-		}
-	}, [newMaxValue, newMinValue, newStepValue])
-
+	const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+		event.currentTarget.value = event.currentTarget.value.replace(/^0/, '');
+		setSaveDisabled(false)
+		//setDefaultDisabled(false)
+	}
 
 	// OnChange
 	const maxOnChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-		errorAllDefault && setErrorAllDefault(false)
-
-		event.currentTarget.value = event.currentTarget.value.replace(/^0/, '');
+		onChangeHandler(event)
 
 		if (Number(event.currentTarget.value) > props.LIMIT_VALUE) {
 			setErrorMax(errorMessageLength)
@@ -237,9 +231,7 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 	};
 
 	const minOnChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-		errorAllDefault && setErrorAllDefault(false)
-
-		event.currentTarget.value = event.currentTarget.value.replace(/^0/, '');
+		onChangeHandler(event)
 
 		if (Number(event.currentTarget.value) > props.LIMIT_VALUE) {
 			setErrorMin(errorMessageLength)
@@ -253,9 +245,7 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 	};
 
 	const stepOnChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-		errorAllDefault && setErrorAllDefault(false)
-
-		event.currentTarget.value = event.currentTarget.value.replace(/^0/, '');
+		onChangeHandler(event)
 
 		if (event.currentTarget.value.length > 3) {
 			setNewStepValue(newStepValue)
@@ -356,7 +346,7 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 				</div>
 
 			</div>
-			<SettingsManagement saveSettings={saveSettings} defaultSettings={defaultSettings} randomSettings={randomSettings} errorAll={errorAll}></SettingsManagement>
+			<SettingsManagement saveSettings={saveSettings} defaultSettings={defaultSettings} randomSettings={randomSettings} saveDisabled={saveDisabled} defaultDisabled={defaultDisabled}></SettingsManagement>
 		</form>
 	);
 };
