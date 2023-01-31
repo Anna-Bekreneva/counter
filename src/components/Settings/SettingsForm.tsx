@@ -1,7 +1,6 @@
 import React, {ChangeEvent, KeyboardEvent, LegacyRef, useEffect, useState} from 'react';
 import {SettingsManagement} from './SettingsManagement';
 import {SettingsItem} from './SettingsItem';
-import {Warning} from '../Warning';
 
 type SettingsFormPropsType = {
 	maxNumber: number
@@ -207,12 +206,17 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 			setErrorMax(errorMessageGreaterMax)
 			setSaveDisabled(true)
 		}
+
+		if (newMinValue === props.DEFAULT_MIN && newMaxValue === props.DEFAULT_MAX && newStepValue === props.DEFAULT_STEP) {
+			setDefaultDisabled(true)
+		} else if (newMinValue !== props.DEFAULT_MIN || newMaxValue !== props.DEFAULT_MAX || newStepValue !== props.DEFAULT_STEP) {
+			setDefaultDisabled(false)
+		}
 	}, [newMinValue, newMaxValue, newStepValue])
 
 	const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
 		event.currentTarget.value = event.currentTarget.value.replace(/^0/, '');
 		setSaveDisabled(false)
-		//setDefaultDisabled(false)
 	}
 
 	// OnChange
