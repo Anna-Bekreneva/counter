@@ -3,6 +3,7 @@ import './styles/global.css';
 import './styles/reset.css';
 import './styles/counter.css';
 import './styles/settings.css';
+import './styles/notification.css';
 import {Counter} from './components/Counter/Counter';
 import {Settings} from './components/Settings/Settings';
 
@@ -48,17 +49,12 @@ function App () {
 		setCounter(min)
 	}
 
-	const defaultSettings = () => {
-		setCounter(DEFAULT_MIN);
-		setStepNumber(DEFAULT_STEP)
-	}
-
 	return (
 		<div className='wrapper'>
 			<div className='container'>
 				<h1 className='heading'>Counter</h1>
 				<div className='wrapper__container'>
-					<Settings saveSettings={saveSettings} defaultSettings={defaultSettings} maxNumber={maxNumber} minNumber={minNumber} stepNumber={stepNumber} DEFAULT_MAX={DEFAULT_MAX} DEFAULT_MIN={DEFAULT_MIN} DEFAULT_STEP={DEFAULT_STEP} LIMIT_VALUE={LIMIT_VALUE}></Settings>
+					<Settings saveSettings={saveSettings} maxNumber={maxNumber} minNumber={minNumber} stepNumber={stepNumber} DEFAULT_MAX={DEFAULT_MAX} DEFAULT_MIN={DEFAULT_MIN} DEFAULT_STEP={DEFAULT_STEP} LIMIT_VALUE={LIMIT_VALUE}></Settings>
 					<Counter buttonCounterOnClickCallback={buttonCounterOnClickCallback} counter={counter} maxNumber={maxNumber} minNumber={minNumber} stepNumber={stepNumber} isRemainedMax={isRemainedMax} remainedMax={remainedMax}></Counter>
 				</div>
 			</div>

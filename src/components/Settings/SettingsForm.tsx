@@ -10,7 +10,8 @@ type SettingsFormPropsType = {
 	DEFAULT_MAX: number
 	DEFAULT_MIN: number
 	DEFAULT_STEP: number
-	defaultSettings: () => void
+	notificationText: string
+	callbackForNotification: (text: string) => void
 	saveSettings: (max: number, min: number, step: number) => void
 }
 
@@ -32,6 +33,12 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 	const errorMessageGreaterStep = 'The step must be less than the maximum number';
 	const errorMessageGreaterMaxForStep = 'The max value must be greater than the step';
 
+	const notificationRandom = 'Random settings set'
+	const notificationDefault = 'Default settings set'
+	const notificationSave = 'Settings have been saved'
+	const notificationForget = 'Don\'t forget to save your changes'
+	const notificationCan = 'You can manage settings'
+
 	const maxRef: LegacyRef<HTMLInputElement> | undefined = React.createRef()
 	const minRef: LegacyRef<HTMLInputElement> | undefined = React.createRef()
 	const stepRef: LegacyRef<HTMLInputElement> | undefined = React.createRef()
@@ -45,6 +52,7 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 
 	const [saveDisabled, setSaveDisabled] = useState(true)
 	const [defaultDisabled, setDefaultDisabled] = useState(true)
+
 
 	const resetButtonDopClass = () => {
 		setMaxButtonDopClass('')
@@ -214,9 +222,20 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 		}
 	}, [newMinValue, newMaxValue, newStepValue])
 
+
+	useEffect(() => {
+		if (newMaxValue === props.maxNumber && newMinValue === props.minNumber && newStepValue === props.stepNumber) {
+			setSaveDisabled(true)
+			props.notificationText === notificationForget && props.callbackForNotification(notificationCan)
+
+		} else if (newMaxValue !== props.maxNumber || newMinValue !== props.minNumber || newStepValue !== props.stepNumber) {
+			setSaveDisabled(false)
+			props.callbackForNotification(notificationForget)
+		}
+	}, [newMaxValue, newMinValue, newStepValue, props.maxNumber, props.minNumber, props.stepNumber])
+
 	const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
 		event.currentTarget.value = event.currentTarget.value.replace(/^0/, '');
-		setSaveDisabled(false)
 	}
 
 	// OnChange
@@ -259,7 +278,10 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 	};
 
 	// Settings
-	const saveSettings = () => props.saveSettings(newMaxValue, newMinValue, newStepValue)
+	const saveSettings = () => {
+		props.saveSettings(newMaxValue, newMinValue, newStepValue);
+		props.callbackForNotification(notificationSave)
+	}
 
 	const resetError = () => {
 		errorMax && setErrorMax('');
@@ -271,7 +293,8 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 		setNewMaxValue(props.DEFAULT_MAX);
 		setNewMinValue(props.DEFAULT_MIN);
 		setNewStepValue(props.DEFAULT_STEP);
-		props.defaultSettings();
+		props.saveSettings(props.DEFAULT_MAX, props.DEFAULT_MIN, props.DEFAULT_STEP);
+		props.callbackForNotification(notificationDefault);
 		resetError();
 	};
 
@@ -289,6 +312,7 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 		setNewStepValue(randomStep);
 		resetError();
 		props.saveSettings(randomMax, randomMin, randomStep);
+		props.callbackForNotification(notificationRandom);
 	};
 
 	return (

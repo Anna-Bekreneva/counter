@@ -1,5 +1,5 @@
 body {
-    background-color: #002c35;
+    background-color: #343838;
     color: #ffffff;
     line-height: 1.3;
     font-weight: 400;
@@ -46,11 +46,11 @@ body {
     width: 100%;
     padding: 20px;
     border-radius: 20px;
-    background-color: #0d4450;
+    background-color: #005f6b;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 3px 10px 1px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 3px 10px 1px rgba(52, 56, 56, 0.06);
     margin-bottom: 34px;
 }
 
@@ -72,8 +72,8 @@ body {
     align-items: center;
     justify-content: center;
     border-radius: 8px;
-    background-color:  #02b9f5;
-    color: #000000;
+    background-color:  #00dffc;
+    color: #343838;
     font-weight: 500;
     box-shadow: 0 4px 5px 5px rgba(0, 0, 0, 0.14);
     transition: transform 0.4s, box-shadow 0.4s, opacity 0.4s, background-color 0.4s, color 0.4s, border-color 0.4s;
@@ -82,9 +82,9 @@ body {
 }
 
 .button:focus {
-    background-color: #0d4450;
+    background-color: #005F6B;
     color: #ffffff;
-    border-color: #02b9f5;
+    border-color: #00dffc;
 }
 
 .button:hover {
@@ -102,20 +102,20 @@ body {
 }
 
 .field {
-    background-color: #096682;
+    background-color: #008c9e;
     padding: 10px 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 4px rgba(0, 48, 51, 0.25);
+    box-shadow: 0 4px 4px rgba(52, 56, 56, 0.25);
     transition: color 0.4s;
     text-align: center;
 }
 
 .field--error {
-    box-shadow: 0 0 0 2px #d0250f;
+    box-shadow: 0 0 0 2px #c91307;
 }
 
 .field--error .settings__input {
-    color: #d0250f;
+    color: #c91307;
 }
 
 .field::placeholder {
@@ -124,7 +124,7 @@ body {
 }
 
 .field:focus {
-    box-shadow: 0 0 0 2px #02b9f5;
+    box-shadow: 0 0 0 2px #00dffc;
     outline: 0;
 }
 

@@ -46,7 +46,7 @@
 }
 
 .settings__error {
-    color: #d0250f;
+    color: #c91307;
     font-size: 14px;
     position: absolute;
     right: 0;
@@ -65,15 +65,9 @@
 }
 
 .settings__button:hover {
-    background-color: #206bb8;
-    transform: translate(0);
-}
-
-.setting__button:focus,
-.settings__button--active {
-    background-color: #0d4450;
+    background-color: #005F6B;
     color: #ffffff;
-    border-color: #02b9f5;
+    transform: translate(0);
 }
 
 .settings__button--minus {
