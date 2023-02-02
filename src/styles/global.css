@@ -54,6 +54,14 @@ body {
     margin-bottom: 34px;
 }
 
+.tablo--mini {
+    background-color: #005f6b;
+    margin-bottom: 24px;
+    border-radius: 12px;
+    min-height: 82px;
+    height: auto;
+}
+
 .sr-only {
     position: absolute;
     width: 1px;

@@ -1,0 +1,20 @@
+.statistics {
+    justify-content: space-between;
+}
+
+.statistics__left {
+    margin-right: 10px;
+}
+
+.statistics__text {
+    font-size: 16px;
+}
+
+.statistics__accent {
+    font-weight: 600;
+}
+
+.statistics__default {
+    text-align: center;
+    width: 100%;
+}
