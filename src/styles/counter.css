@@ -24,3 +24,20 @@
     transform: translateX(-50%);
 }
 
+@media(max-width: 1200px) {
+    .counter-tablo__number {
+        font-size: 40px;
+    }
+
+    .counter-tablo {
+        height: 200px;
+    }
+}
+
+@media(max-width: 580px) {
+    .counter-tablo__number {
+        font-size: 32px;
+    }
+}
+
+

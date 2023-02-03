@@ -36,12 +36,14 @@ function App () {
 			if (counter <= maxNumber - stepNumber && counter >= minNumber) {
 				setCounter((actual) => actual + stepNumber)
 				setIncPressed((actual) => actual + 1)
+				!isRunStatistics && setIsRunStatistics(true)
 			}
 		}
 
 		if (type === 'dec') {
 			counter > minNumber && setCounter((actual) => actual - stepNumber)
 			setDecPressed((actual) => actual + 1)
+			!isRunStatistics && setIsRunStatistics(true)
 		}
 
 		if (type === 'res') {

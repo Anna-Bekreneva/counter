@@ -85,3 +85,25 @@
 .settings__input::-webkit-inner-spin-button {
     display: none;
 }
+
+@media(max-width: 1200px) {
+    .settings {
+        margin-right: 0;
+        margin-bottom: 40px;
+    }
+}
+
+@media(max-width: 580px) {
+    .settings__item {
+        flex-direction: column;
+    }
+
+    .settings__label {
+        margin-right: 0;
+        margin-bottom: 8px;
+    }
+
+    .settings__content:not(:last-child) {
+        margin-bottom: 20px;
+    }
+}

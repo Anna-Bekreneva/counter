@@ -25,10 +25,10 @@ export const Statistics: React.FC<StaticsPropsType> = (props) => {
 				</p>
 			</div>
 			<div className='statistics__right'>
-				<p className='statistics__text'> the button «inc» was pressed
+				<p className='statistics__text'> the button «inc» was pressed:
 					<span className='statistics__accent'>{' ' + props.incPressed}</span>
 				</p>
-				<p className='statistics__text'> the button «dec» was pressed
+				<p className='statistics__text'> the button «dec» was pressed:
 					<span className='statistics__accent'>{' ' + props.decPressed}</span>
 				</p>
 			</div>

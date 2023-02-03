@@ -18,3 +18,14 @@
     text-align: center;
     width: 100%;
 }
+
+@media(max-width: 580px) {
+    .statistics {
+        flex-direction: column;
+    }
+
+    .statistics__left {
+        margin-right: 0;
+        margin-bottom: 16px;
+    }
+}
