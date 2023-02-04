@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {SettingsForm} from './SettingsForm';
 import {Notification} from './Notification';
 
-
 type SettingsPropsType = {
 	maxNumber: number
 	minNumber: number

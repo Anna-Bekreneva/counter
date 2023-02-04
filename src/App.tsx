@@ -57,17 +57,36 @@ function App () {
 		setStepNumber(step)
 		setCounter(min)
 		setIsRunStatistics(true)
+
+		localStorage.setItem('maxValue', max.toString())
+		localStorage.setItem('minValue', min.toString())
+		localStorage.setItem('stepValue', step.toString())
 	}
 
+	useEffect(() => {
+		const maxValue = localStorage.getItem('maxValue')
+		setMaxNumber(Number(maxValue))
+
+		const minValue = localStorage.getItem('minValue')
+		setMinNumber(Number(minValue))
+
+		const stepValue = localStorage.getItem('stepValue')
+		setStepNumber(Number(stepValue))
+	}, [])
+
+	console.log(maxNumber)
 	return (
 		<div className='wrapper'>
 			<div className='container'>
+				<input type="number" placeholder={'1'}/>
 				<h1 className='heading'>Counter</h1>
 				<div className='wrapper__container'>
 					<Settings saveSettings={saveSettings} maxNumber={maxNumber} minNumber={minNumber} stepNumber={stepNumber} DEFAULT_MAX={DEFAULT_MAX} DEFAULT_MIN={DEFAULT_MIN} DEFAULT_STEP={DEFAULT_STEP} LIMIT_VALUE={LIMIT_VALUE}></Settings>
 					<Counter buttonCounterOnClickCallback={buttonCounterOnClickCallback} counter={counter} maxNumber={maxNumber} minNumber={minNumber} stepNumber={stepNumber} isRemainedMax={isRemainedMax} remainedMax={remainedMax} isRunStatistics={isRunStatistics} incPressed={incPressed} decPressed={decPressed}></Counter>
 				</div>
 			</div>
+			
+
 		</div>
 	);
 }

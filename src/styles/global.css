@@ -120,11 +120,11 @@ body {
 }
 
 .field--error {
-    box-shadow: 0 0 0 2px #c91307;
+    box-shadow: 0 0 0 2px #ef1608;
 }
 
 .field--error .settings__input {
-    color: #c91307;
+    color: #ef1608;
 }
 
 .field::placeholder {
@@ -135,10 +135,6 @@ body {
 .field:focus {
     box-shadow: 0 0 0 2px #00dffc;
     outline: 0;
-}
-
-.field:hover {
-    opacity: 1;
 }
 
 .management {

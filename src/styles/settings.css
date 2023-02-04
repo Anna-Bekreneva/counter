@@ -46,7 +46,7 @@
 }
 
 .settings__error {
-    color: #c91307;
+    color: #ef1608;
     font-size: 14px;
     position: absolute;
     right: 0;
@@ -54,6 +54,7 @@
 }
 
 .settings__button {
+    transform: translateY(0);
     position: absolute;
     padding: 6px;
     line-height: 1;
@@ -67,7 +68,7 @@
 .settings__button:hover {
     background-color: #005F6B;
     color: #ffffff;
-    transform: translate(0);
+    transform: translateY(0);
 }
 
 .settings__button--minus {

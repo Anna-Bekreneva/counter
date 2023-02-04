@@ -21,6 +21,19 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 	const [newMinValue, setNewMinValue] = useState(props.minNumber);
 	const [newStepValue, setNewStepValue] = useState(props.stepNumber);
 
+	// For localStorage
+	useEffect(() => {
+		setNewMaxValue(props.maxNumber)
+	}, [props.maxNumber])
+
+	useEffect(() => {
+		setNewMinValue(props.minNumber)
+	}, [props.minNumber])
+
+	useEffect(() => {
+		setNewStepValue(props.stepNumber)
+	}, [props.stepNumber])
+
 	const [warning, setWarning] = useState('')
 	const [errorMax, setErrorMax] = useState('');
 	const [errorMin, setErrorMin] = useState('');
@@ -206,13 +219,11 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 		if (newMaxValue < newStepValue) {
 			setErrorMax(errorMessageGreaterMaxForStep)
 			setErrorStep(errorMessageGreaterStep)
-			setSaveDisabled(true)
 		}
 
 		if (newMinValue >= newMaxValue) {
 			setErrorMin(errorMessageLessMin)
 			setErrorMax(errorMessageGreaterMax)
-			setSaveDisabled(true)
 		}
 
 		if (newMinValue === props.DEFAULT_MIN && newMaxValue === props.DEFAULT_MAX && newStepValue === props.DEFAULT_STEP) {
@@ -224,11 +235,11 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 
 
 	useEffect(() => {
-		if (newMaxValue === props.maxNumber && newMinValue === props.minNumber && newStepValue === props.stepNumber) {
+		if ((newMaxValue === props.maxNumber && newMinValue === props.minNumber && newStepValue === props.stepNumber) || (newMaxValue < newStepValue || newMinValue >= newMaxValue)) {
 			setSaveDisabled(true)
 			props.notificationText === notificationForget && props.callbackForNotification(notificationCan)
 
-		} else if (newMaxValue !== props.maxNumber || newMinValue !== props.minNumber || newStepValue !== props.stepNumber) {
+		} else if ((newMaxValue !== props.maxNumber || newMinValue !== props.minNumber || newStepValue !== props.stepNumber) || (newMaxValue >= newStepValue || newMinValue < newMaxValue)) {
 			setSaveDisabled(false)
 			props.callbackForNotification(notificationForget)
 		}
