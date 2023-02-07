@@ -17,6 +17,7 @@ export const Tablo: React.FC<TabloPropsType> = (props) => {
 		: props.counter === props.minNumber ? <span className='counter-tablo__text'>This is min value</span> : null
 
 	const remained = () => isRemainedMax && props.remainedMax()
+
 	const isRemainedMax = props.isRemainedMax && <Remained text={`Add remainder ${props.maxNumber - props.counter}?`} button={'yes'} remained={remained}></Remained>
 
 	return (

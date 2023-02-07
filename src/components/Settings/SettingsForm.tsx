@@ -15,7 +15,8 @@ type SettingsFormPropsType = {
 	saveSettings: (max: number, min: number, step: number) => void
 }
 
-export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
+export const
+	SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 
 	const [newMaxValue, setNewMaxValue] = useState(props.maxNumber);
 	const [newMinValue, setNewMinValue] = useState(props.minNumber);

@@ -1,4 +1,4 @@
-import React, {ChangeEvent, KeyboardEvent, WheelEvent} from 'react';
+import React, {ChangeEvent, KeyboardEvent} from 'react';
 import {Warning} from '../Warning';
 
 type settingsItemPropsType = {

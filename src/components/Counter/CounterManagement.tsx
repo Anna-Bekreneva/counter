@@ -12,6 +12,7 @@ type ManagementPropsType = {
 export const CounterManagement: React.FC<ManagementPropsType> = (props) => {
 
 	const onClickHandler = (type: ButtonCounterType) => () => props.buttonCounterOnClickCallback(type)
+
 	const disabledInc = props.counter + props.stepNumber > props.maxNumber || props.counter === props.maxNumber
 	const disabledDec = props.counter - props.stepNumber < props.minNumber || props.counter === props.minNumber
 	const disabledRes = props.counter - props.stepNumber === props.minNumber || props.counter === props.minNumber
