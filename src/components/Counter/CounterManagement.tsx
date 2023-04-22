@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {ButtonCounterType} from '../../App';
 
 type ManagementPropsType = {
@@ -9,7 +9,7 @@ type ManagementPropsType = {
 	minNumber: number
 }
 
-export const CounterManagement: React.FC<ManagementPropsType> = (props) => {
+export const CounterManagement: React.FC<ManagementPropsType> = memo((props) => {
 
 	const onClickHandler = (type: ButtonCounterType) => () => props.buttonCounterOnClickCallback(type)
 
@@ -24,4 +24,4 @@ export const CounterManagement: React.FC<ManagementPropsType> = (props) => {
 			<button className='management__button button' type='button' onClick={onClickHandler('res')} disabled={disabledRes}>res</button>
 		</div>
 	)
-}
+})

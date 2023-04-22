@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo, useCallback, useEffect} from 'react';
 import {Remained} from './Remained';
 
 type TabloPropsType = {
@@ -10,15 +10,15 @@ type TabloPropsType = {
 	remainedMax: () => void
 }
 
-export const Tablo: React.FC<TabloPropsType> = (props) => {
-
+export const Tablo: React.FC<TabloPropsType> = memo((props) => {
 	const text = props.counter === props.maxNumber
 		? <span className='counter-tablo__text'>This is max value</span>
 		: props.counter === props.minNumber ? <span className='counter-tablo__text'>This is min value</span> : null
 
-	const remained = () => isRemainedMax && props.remainedMax()
+	const remained = useCallback(() => isRemainedMax && props.remainedMax(), [props.remainedMax, props.isRemainedMax])
 
-	const isRemainedMax = props.isRemainedMax && <Remained text={`Add remainder ${props.maxNumber - props.counter}?`} button={'yes'} remained={remained}></Remained>
+	const isRemainedMax = props.isRemainedMax &&
+		<Remained text={`Add remainder ${props.maxNumber - props.counter}?`} button={'yes'} remained={remained}></Remained>
 
 	return (
 		<div className='counter-tablo tablo'>
@@ -27,4 +27,4 @@ export const Tablo: React.FC<TabloPropsType> = (props) => {
 			{isRemainedMax}
 		</div>
 	)
-}
+})

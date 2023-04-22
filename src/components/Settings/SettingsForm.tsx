@@ -1,4 +1,4 @@
-import React, {ChangeEvent, KeyboardEvent, LegacyRef, useEffect, useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, LegacyRef, useCallback, useEffect, useState} from 'react';
 import {SettingsManagement} from './SettingsManagement';
 import {SettingsItem} from './SettingsItem';
 
@@ -15,8 +15,7 @@ type SettingsFormPropsType = {
 	saveSettings: (max: number, min: number, step: number) => void
 }
 
-export const
-	SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
+export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 
 	const [newMaxValue, setNewMaxValue] = useState(props.maxNumber);
 	const [newMinValue, setNewMinValue] = useState(props.minNumber);
@@ -25,17 +24,21 @@ export const
 	// For localStorage
 	useEffect(() => {
 		setNewMaxValue(props.maxNumber)
+		return () => {}
 	}, [props.maxNumber])
 
 	useEffect(() => {
 		setNewMinValue(props.minNumber)
+		return () => {}
 	}, [props.minNumber])
 
 	useEffect(() => {
 		setNewStepValue(props.stepNumber)
+		return () => {}
 	}, [props.stepNumber])
 
 	const [warning, setWarning] = useState('')
+
 	const [errorMax, setErrorMax] = useState('');
 	const [errorMin, setErrorMin] = useState('');
 	const [errorStep, setErrorStep] = useState('');
@@ -67,8 +70,7 @@ export const
 	const [saveDisabled, setSaveDisabled] = useState(true)
 	const [defaultDisabled, setDefaultDisabled] = useState(true)
 
-
-	const resetButtonDopClass = () => {
+	const resetButtonDopClass = useCallback(() => {
 		setMaxButtonDopClass('')
 		setMinButtonDopClass('')
 		setStepButtonDopClass('')
@@ -76,7 +78,7 @@ export const
 		setWhichButtonMaxDopClass(null)
 		setWhichButtonMinDopClass(null)
 		setWhichButtonStepDopClass(null)
-	}
+	}, [])
 
 	// OnKeyDown
 	const allOnKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -167,20 +169,20 @@ export const
 	};
 
 	// PlusOnClick
-	const maxPlusOnClickHandler = () => {
+	const maxPlusOnClickHandler = useCallback(() => {
 		setNewMaxValue((actual) => actual + 1)
 		maxRef.current && maxRef.current.focus()
-	}
+	}, [maxRef])
 
-	const minPlusOnClickHandler = () => {
+	const minPlusOnClickHandler = useCallback(() => {
 		setNewMinValue((actual) => actual + 1)
 		minRef.current && minRef.current.focus()
-	}
+	}, [minRef])
 
-	const stepPlusOnClickHandler = () => {
+	const stepPlusOnClickHandler = useCallback(() => {
 		setNewStepValue((actual) => actual + 1)
 		stepRef.current && stepRef.current.focus()
-	}
+	}, [stepRef])
 
 	const maxMinusButtonDisabled = newMaxValue < props.DEFAULT_MIN + props.DEFAULT_STEP + props.DEFAULT_STEP
 	const maxPLusButtonDisabled = newMaxValue === props.LIMIT_VALUE
@@ -192,20 +194,20 @@ export const
 	const stepPLusButtonDisabled = newStepValue === props.LIMIT_VALUE - 1
 
 	// MinusOnClick
-	const maxMinusOnClickHandler = () => {
+	const maxMinusOnClickHandler = useCallback(() => {
 		!maxMinusButtonDisabled && setNewMaxValue((actual) => actual - 1);
 		maxRef.current && maxRef.current.focus()
-	}
+	}, [maxMinusButtonDisabled, maxRef])
 
-	const minMinusOnClickHandler = () => {
+	const minMinusOnClickHandler = useCallback(() => {
 		!minMinusButtonDisabled && setNewMinValue((actual) => actual - 1);
 		minRef.current && minRef.current.focus()
-	}
+	}, [minMinusButtonDisabled, minRef])
 
-	const stepMinusOnClickHandler = () => {
+	const stepMinusOnClickHandler = useCallback(() => {
 		!stepMinusButtonDisabled && setNewStepValue((actual) => actual - 1);
 		stepRef.current && stepRef.current.focus()
-	}
+	}, [stepMinusButtonDisabled, stepRef])
 
 	useEffect(() => {
 		errorMax && setErrorMax('')
@@ -232,8 +234,9 @@ export const
 		} else if (newMinValue !== props.DEFAULT_MIN || newMaxValue !== props.DEFAULT_MAX || newStepValue !== props.DEFAULT_STEP) {
 			setDefaultDisabled(false)
 		}
-	}, [newMinValue, newMaxValue, newStepValue])
 
+		return () => {}
+	}, [newMinValue, newMaxValue, newStepValue])
 
 	useEffect(() => {
 		if ((newMaxValue === props.maxNumber && newMinValue === props.minNumber && newStepValue === props.stepNumber) || (newMaxValue < newStepValue || newMinValue >= newMaxValue)) {
@@ -244,6 +247,8 @@ export const
 			setSaveDisabled(false)
 			props.callbackForNotification(notificationForget)
 		}
+
+		return () => {}
 	}, [newMaxValue, newMinValue, newStepValue, props.maxNumber, props.minNumber, props.stepNumber])
 
 	const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
@@ -251,7 +256,7 @@ export const
 	}
 
 	// OnChange
-	const maxOnChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+	const maxOnChangeHandler = useCallback((event: ChangeEvent<HTMLInputElement>) => {
 		onChangeHandler(event)
 
 		if (Number(event.currentTarget.value) > props.LIMIT_VALUE) {
@@ -263,9 +268,9 @@ export const
 		} else {
 			setNewMaxValue(Number(event.currentTarget.value))
 		}
-	};
+	}, [onChangeHandler, props.LIMIT_VALUE, props.LIMIT_VALUE])
 
-	const minOnChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+	const minOnChangeHandler = useCallback((event: ChangeEvent<HTMLInputElement>) => {
 		onChangeHandler(event)
 
 		if (Number(event.currentTarget.value) > props.LIMIT_VALUE) {
@@ -277,9 +282,9 @@ export const
 		} else {
 			setNewMinValue(Number(event.currentTarget.value))
 		}
-	};
+	}, [onChangeHandler, props.LIMIT_VALUE])
 
-	const stepOnChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+	const stepOnChangeHandler = useCallback((event: ChangeEvent<HTMLInputElement>) => {
 		onChangeHandler(event)
 
 		if (event.currentTarget.value.length > 3) {
@@ -287,13 +292,13 @@ export const
 		} else {
 			setNewStepValue(Number(event.currentTarget.value));
 		}
-	};
+	}, [onChangeHandler])
 
 	// Settings
-	const saveSettings = () => {
+	const saveSettings = useCallback(() => {
 		props.saveSettings(newMaxValue, newMinValue, newStepValue);
 		props.callbackForNotification(notificationSave)
-	}
+	}, [newMaxValue, newMinValue, newStepValue, notificationSave, props.saveSettings, props.callbackForNotification])
 
 	const resetError = () => {
 		errorMax && setErrorMax('');
@@ -301,16 +306,16 @@ export const
 		errorStep && setErrorStep('');
 	};
 
-	const defaultSettings = () => {
+	const defaultSettings = useCallback(() => {
 		setNewMaxValue(props.DEFAULT_MAX);
 		setNewMinValue(props.DEFAULT_MIN);
 		setNewStepValue(props.DEFAULT_STEP);
 		props.saveSettings(props.DEFAULT_MAX, props.DEFAULT_MIN, props.DEFAULT_STEP);
 		props.callbackForNotification(notificationDefault);
 		resetError();
-	};
+	}, [props.DEFAULT_MAX, props.DEFAULT_MIN, props.DEFAULT_STEP, notificationDefault, props.saveSettings, props.callbackForNotification, resetError])
 
-	const randomSettings = () => {
+	const randomSettings = useCallback(() => {
 		const randomMax = Math.floor(Math.random() * ( props.LIMIT_VALUE - newStepValue )) + newStepValue;
 		const randomMin = Math.floor(Math.random() * ( randomMax - props.stepNumber ));
 
@@ -325,7 +330,7 @@ export const
 		resetError();
 		props.saveSettings(randomMax, randomMin, randomStep);
 		props.callbackForNotification(notificationRandom);
-	};
+	}, [props.LIMIT_VALUE, newStepValue, props.stepNumber, resetError, props.saveSettings, props.callbackForNotification])
 
 	return (
 		<form className="settings__form" action={'#'}>
@@ -384,7 +389,6 @@ export const
 						warning={warning}
 					/>
 				</div>
-
 			</div>
 			<SettingsManagement saveSettings={saveSettings} defaultSettings={defaultSettings} randomSettings={randomSettings} saveDisabled={saveDisabled} defaultDisabled={defaultDisabled}></SettingsManagement>
 		</form>

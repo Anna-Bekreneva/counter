@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {memo, useEffect, useState} from 'react';
 import {CounterManagement} from './CounterManagement';
 import {Tablo} from './Tablo';
 import {ButtonCounterType} from '../../App';
@@ -17,7 +17,7 @@ type CounterPropsType = {
 	buttonCounterOnClickCallback: (type: ButtonCounterType) => void
 }
 
-export const Counter: React.FC<CounterPropsType> = (props) => {
+export const Counter: React.FC<CounterPropsType> = memo((props) => {
 
 	const [statisticsMaxClick, setStatisticsMaxClick] = useState(Math.ceil((props.maxNumber - props.counter) / props.stepNumber))
 	const [statisticsMinClick, setStatisticsMinClick] = useState(Math.ceil((props.counter - props.minNumber) / props.stepNumber))
@@ -28,11 +28,15 @@ export const Counter: React.FC<CounterPropsType> = (props) => {
 	useEffect(() => {
 		setStatisticsMaxNumber(props.maxNumber - props.counter)
 		setStatisticsMaxClick(Math.ceil((props.maxNumber - props.counter) / props.stepNumber))
+
+		return () => {}
 	}, [props.counter, props.maxNumber])
 
 	useEffect(() => {
 		setStatisticsMinNumber(props.counter - props.minNumber)
 		setStatisticsMinClick(Math.ceil((props.counter - props.minNumber) / props.stepNumber))
+
+		return () => {}
 	}, [props.counter, props.minNumber])
 
 	return (
@@ -43,4 +47,4 @@ export const Counter: React.FC<CounterPropsType> = (props) => {
 			<CounterManagement counter={props.counter} maxNumber={props.maxNumber} minNumber={props.minNumber} stepNumber={props.stepNumber} buttonCounterOnClickCallback={props.buttonCounterOnClickCallback}></CounterManagement>
 		</div>
 	)
-}
+})

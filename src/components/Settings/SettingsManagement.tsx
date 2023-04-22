@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 
 type SettingsManagementPropsType = {
 	saveDisabled: boolean
@@ -8,7 +8,7 @@ type SettingsManagementPropsType = {
 	randomSettings: () => void
 }
 
-export const SettingsManagement: React.FC<SettingsManagementPropsType> = (props) => {
+export const SettingsManagement: React.FC<SettingsManagementPropsType> = memo((props) => {
 
 	return (
 		<div className='management'>
@@ -17,4 +17,4 @@ export const SettingsManagement: React.FC<SettingsManagementPropsType> = (props)
 			<button className='management__button button' type='button' onClick={props.randomSettings}>random</button>
 		</div>
 	)
-}
+})

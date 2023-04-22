@@ -1,4 +1,4 @@
-import React, {ChangeEvent, KeyboardEvent} from 'react';
+import React, {ChangeEvent, KeyboardEvent, memo} from 'react';
 import {Warning} from '../Warning';
 
 type settingsItemPropsType = {
@@ -20,8 +20,7 @@ type settingsItemPropsType = {
 	warning?: string
 }
 
-export const SettingsItem: React.FC<settingsItemPropsType> = (props) => {
-
+export const SettingsItem: React.FC<settingsItemPropsType> = memo((props) => {
 	return (
 		<div className="settings__content">
 			<div className="settings__item">
@@ -36,4 +35,4 @@ export const SettingsItem: React.FC<settingsItemPropsType> = (props) => {
 			{props.error && <span className="settings__error">{props.error}</span>}
 		</div>
 	);
-};
+})

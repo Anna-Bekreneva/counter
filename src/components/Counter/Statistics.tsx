@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 
 type StaticsPropsType = {
 	maxNumber: number
@@ -10,7 +10,7 @@ type StaticsPropsType = {
 	decPressed: number
 }
 
-export const Statistics: React.FC<StaticsPropsType> = (props) => {
+export const Statistics: React.FC<StaticsPropsType> = memo((props) => {
 
 	const result = props.isRunStatistics ?
 		<>
@@ -36,4 +36,4 @@ export const Statistics: React.FC<StaticsPropsType> = (props) => {
 		: <p className='statistics__default'>stats will be here</p>
 
 	return  <div className='statistics tablo tablo--mini'>{result}</div>
-}
+})
