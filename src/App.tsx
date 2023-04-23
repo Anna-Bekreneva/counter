@@ -6,64 +6,58 @@ import './styles/settings.css';
 import './styles/statistics.css';
 import {Counter} from './components/Counter/Counter';
 import {Settings} from './components/Settings/Settings';
+import {useDispatch, useSelector} from "react-redux";
+import {AppRootStateType} from "./state/store";
+import {setValueAC} from "./state/valuesReducer";
+import {changeStatusStatisticsAC, clickDecreaseButtonAC, clickIncreaseButtonAC} from "./state/statisticsReducer";
 
 export type ButtonCounterType = 'inc' | 'dec' | 'res'
 
 function App () {
+	const dispatch = useDispatch()
 
-	const DEFAULT_MAX = 5
-	const DEFAULT_MIN = 0
-	const DEFAULT_STEP = 1
-	const LIMIT_VALUE = 300
+	const maxNumber = useSelector<AppRootStateType, number>(state => state.values.maxValue)
+	const minNumber = useSelector<AppRootStateType, number>(state => state.values.minValue)
+	const stepNumber = useSelector<AppRootStateType, number>(state => state.values.stepValue)
+	const counter = useSelector<AppRootStateType, number>(state => state.values.counter)
 
-	const [maxNumber, setMaxNumber] = useState(DEFAULT_MAX)
-	const [minNumber, setMinNumber] = useState(DEFAULT_MIN)
-	const [stepNumber, setStepNumber] = useState(DEFAULT_STEP)
-
-	const [counter, setCounter] = useState(minNumber)
-
-	const [isRunStatistics, setIsRunStatistics] = useState(false)
-
-	const [incPressed, setIncPressed] = useState(0)
-	const [decPressed, setDecPressed] = useState(0)
-
-	const isRemainedMax = counter !== maxNumber && counter + stepNumber > maxNumber
-
-	const remainedMax = useCallback(() => setCounter(maxNumber), [maxNumber])
+	const isRunStatistics = useSelector<AppRootStateType, boolean>(state => state.statistics.isRunStatistics)
+	const increaseButtonPressed = useSelector<AppRootStateType, number>(state => state.statistics.increaseButtonPressed)
+	const decreaseButtonPressed = useSelector<AppRootStateType, number>(state => state.statistics.decreaseButtonPressed)
+	// const [isRunStatistics, setIsRunStatistics] = useState(false)
+	// const [increaseButtonPressed, setIncreaseButtonPressed] = useState(0)
+	// const [decreaseButtonPressed, setDecreaseButtonPressed] = useState(0)
 
 	const buttonCounterOnClickCallback = useCallback((type: ButtonCounterType) => {
 		if (type === 'inc') {
 			if (counter <= maxNumber - stepNumber && counter >= minNumber) {
-				setCounter((actual) => actual + stepNumber)
-				const newCounter = ((actual: number) => actual + stepNumber)
-				const resultCounter = newCounter(counter)
-				localStorage.setItem('counter', resultCounter.toString())
-				setIncPressed((actual) => actual + 1)
-				!isRunStatistics && setIsRunStatistics(true)
+				dispatch(setValueAC('counter', counter + stepNumber))
+				localStorage.setItem('counter', (counter + stepNumber).toString())
+				dispatch(clickIncreaseButtonAC())
+				// setIncreaseButtonPressed((actual) => actual + 1)
+				!isRunStatistics && dispatch(changeStatusStatisticsAC(true))
 			}
 		}
 
 		if (type === 'dec') {
-			counter > minNumber && setCounter((actual) => actual - stepNumber)
-			const newCounter = ((actual: number) => actual - stepNumber)
-			const resultCounter = newCounter(counter)
-			localStorage.setItem('counter', resultCounter.toString())
-			setDecPressed((actual) => actual + 1)
-			!isRunStatistics && setIsRunStatistics(true)
+			counter > minNumber && dispatch(setValueAC('counter', minNumber - stepNumber))
+			localStorage.setItem('counter', (minNumber - stepNumber).toString())
+			dispatch(clickDecreaseButtonAC())
+			!isRunStatistics && dispatch(changeStatusStatisticsAC(true))
 		}
 
 		if (type === 'res') {
-			counter > minNumber + stepNumber && setCounter(minNumber)
+			counter > minNumber + stepNumber && dispatch(setValueAC('counter', minNumber))
 			localStorage.setItem('counter', minNumber.toString())
 		}
 	}, [counter, maxNumber, stepNumber, minNumber, isRunStatistics])
 
 	const saveSettings = useCallback((max: number, min: number, step: number) => {
-		setMaxNumber(max)
-		setMinNumber(min)
-		setStepNumber(step)
-		setCounter(min)
-		setIsRunStatistics(true)
+		dispatch(setValueAC('maxValue', max))
+		dispatch(setValueAC('minValue', min))
+		dispatch(setValueAC('stepValue', step))
+		dispatch(setValueAC('counter', min))
+		dispatch(changeStatusStatisticsAC(true))
 
 		localStorage.setItem('maxValue', max.toString())
 		localStorage.setItem('minValue', min.toString())
@@ -73,9 +67,8 @@ function App () {
 
 	useEffect(() => {
 		const counterValue = localStorage.getItem('counter')
-		console.log(counterValue)
 		if (counterValue) {
-			setCounter(Number(counterValue))
+			dispatch(setValueAC('counter', Number(counterValue)))
 		}
 
 		return () => {}
@@ -84,18 +77,17 @@ function App () {
 	useEffect(() => {
 		const maxValue = localStorage.getItem('maxValue')
 		if (maxValue) {
-			setMaxNumber(Number(maxValue))
+			dispatch(setValueAC('maxValue', Number(maxValue)))
 		}
 
 		const minValue = localStorage.getItem('minValue')
 		if (minValue) {
-			setMinNumber(Number(minValue))
-			// setCounter(Number(minValue))
+			dispatch(setValueAC('minValue', Number(minValue)))
 		}
 
 		const stepValue = localStorage.getItem('stepValue')
 		if (stepValue) {
-			setStepNumber(Number(stepValue))
+			dispatch(setValueAC('stepValue', Number(stepValue)))
 		}
 
 		return () => {}
@@ -106,8 +98,8 @@ function App () {
 			<div className='container'>
 				<h1 className='heading'>Counter</h1>
 				<div className='wrapper__container'>
-					<Settings saveSettings={saveSettings} maxNumber={maxNumber} minNumber={minNumber} stepNumber={stepNumber} DEFAULT_MAX={DEFAULT_MAX} DEFAULT_MIN={DEFAULT_MIN} DEFAULT_STEP={DEFAULT_STEP} LIMIT_VALUE={LIMIT_VALUE}></Settings>
-					<Counter buttonCounterOnClickCallback={buttonCounterOnClickCallback} counter={counter} maxNumber={maxNumber} minNumber={minNumber} stepNumber={stepNumber} isRemainedMax={isRemainedMax} remainedMax={remainedMax} isRunStatistics={isRunStatistics} incPressed={incPressed} decPressed={decPressed}></Counter>
+					<Settings saveSettings={saveSettings}></Settings>
+					<Counter buttonCounterOnClickCallback={buttonCounterOnClickCallback} isRunStatistics={isRunStatistics} incPressed={increaseButtonPressed} decPressed={decreaseButtonPressed}></Counter>
 				</div>
 			</div>
 		</div>
