@@ -15,7 +15,7 @@ type SetValueAT = ReturnType<typeof setValueAC>
 
 type ActionsTypes = IncreaseValueAT | DecreaseValueAT | SetValueAT
 
-const initialState: ValuesStateType = {maxValue: 0, stepValue: 0, minValue: 0, counter: 0, defaultMin: 0, defaultMax: 5, defaultStep: 1, limitValue: 300}
+const initialState: ValuesStateType = {maxValue: 5, stepValue: 1, minValue: 0, counter: 0, defaultMin: 0, defaultMax: 5, defaultStep: 1, limitValue: 300}
 
 export const valuesReducer = (state: ValuesStateType = initialState, action: ActionsTypes): ValuesStateType => {
     switch (action.type) {

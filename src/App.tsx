@@ -22,11 +22,6 @@ function App () {
 	const counter = useSelector<AppRootStateType, number>(state => state.values.counter)
 
 	const isRunStatistics = useSelector<AppRootStateType, boolean>(state => state.statistics.isRunStatistics)
-	const increaseButtonPressed = useSelector<AppRootStateType, number>(state => state.statistics.increaseButtonPressed)
-	const decreaseButtonPressed = useSelector<AppRootStateType, number>(state => state.statistics.decreaseButtonPressed)
-	// const [isRunStatistics, setIsRunStatistics] = useState(false)
-	// const [increaseButtonPressed, setIncreaseButtonPressed] = useState(0)
-	// const [decreaseButtonPressed, setDecreaseButtonPressed] = useState(0)
 
 	const buttonCounterOnClickCallback = useCallback((type: ButtonCounterType) => {
 		if (type === 'inc') {
@@ -34,14 +29,13 @@ function App () {
 				dispatch(setValueAC('counter', counter + stepNumber))
 				localStorage.setItem('counter', (counter + stepNumber).toString())
 				dispatch(clickIncreaseButtonAC())
-				// setIncreaseButtonPressed((actual) => actual + 1)
 				!isRunStatistics && dispatch(changeStatusStatisticsAC(true))
 			}
 		}
 
 		if (type === 'dec') {
-			counter > minNumber && dispatch(setValueAC('counter', minNumber - stepNumber))
-			localStorage.setItem('counter', (minNumber - stepNumber).toString())
+			counter > minNumber && dispatch(setValueAC('counter', counter - stepNumber))
+			localStorage.setItem('counter', (counter - stepNumber).toString())
 			dispatch(clickDecreaseButtonAC())
 			!isRunStatistics && dispatch(changeStatusStatisticsAC(true))
 		}
@@ -99,7 +93,7 @@ function App () {
 				<h1 className='heading'>Counter</h1>
 				<div className='wrapper__container'>
 					<Settings saveSettings={saveSettings}></Settings>
-					<Counter buttonCounterOnClickCallback={buttonCounterOnClickCallback} isRunStatistics={isRunStatistics} incPressed={increaseButtonPressed} decPressed={decreaseButtonPressed}></Counter>
+					<Counter buttonCounterOnClickCallback={buttonCounterOnClickCallback}></Counter>
 				</div>
 			</div>
 		</div>

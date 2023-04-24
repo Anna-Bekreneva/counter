@@ -1,7 +1,7 @@
 import React, {ChangeEvent, KeyboardEvent, LegacyRef, useCallback, useEffect, useState} from 'react';
 import {SettingsManagement} from './SettingsManagement';
 import {SettingsItem} from './SettingsItem';
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from "../../state/store";
 import {
 	errorMessageGreaterMax,
@@ -16,6 +16,8 @@ import {
 	notificationSave,
 	warningMessage
 } from "../../utilities";
+import {decreaseValueAC, increaseValueAC, setValueAC} from '../../state/valuesReducer';
+import {changeStatusStatisticsAC} from '../../state/statisticsReducer';
 
 type SettingsFormPropsType = {
 	notificationText: string
@@ -25,6 +27,7 @@ type SettingsFormPropsType = {
 
 export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 
+	const dispatch = useDispatch()
 	const DEFAULT_MIN = useSelector<AppRootStateType, number>(state => state.values.defaultMin)
 	const DEFAULT_MAX = useSelector<AppRootStateType, number>(state => state.values.defaultMax)
 	const DEFAULT_STEP = useSelector<AppRootStateType, number>(state => state.values.defaultStep)
@@ -34,25 +37,7 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 	const minNumber = useSelector<AppRootStateType, number>(state => state.values.minValue)
 	const stepNumber = useSelector<AppRootStateType, number>(state => state.values.stepValue)
 
-	const [newMaxValue, setNewMaxValue] = useState(maxNumber);
-	const [newMinValue, setNewMinValue] = useState(minNumber);
-	const [newStepValue, setNewStepValue] = useState(stepNumber);
-
-	// For localStorage
-	useEffect(() => {
-		setNewMaxValue(maxNumber)
-		return () => {}
-	}, [maxNumber])
-
-	useEffect(() => {
-		setNewMinValue(minNumber)
-		return () => {}
-	}, [minNumber])
-
-	useEffect(() => {
-		setNewStepValue(stepNumber)
-		return () => {}
-	}, [stepNumber])
+	console.log(maxNumber, minNumber)
 
 	const [warning, setWarning] = useState('')
 
@@ -94,17 +79,17 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 		allOnKeyDownHandler(event)
 		// down - 40, up - 38
 
-		if ((newMaxValue !== DEFAULT_STEP && event.keyCode === 40) || (newMaxValue !== LIMIT_VALUE && event.keyCode === 38)) {
+		if ((maxNumber !== DEFAULT_STEP && event.keyCode === 40) || (maxNumber !== LIMIT_VALUE && event.keyCode === 38)) {
 			setMaxButtonDopClass('settings__button--active')
 		} else {
 			resetButtonDopClass()
 		}
 
-		if ((newMaxValue === DEFAULT_STEP && event.keyCode === 40) || (newMaxValue === LIMIT_VALUE && event.keyCode === 38)) {
+		if ((maxNumber === DEFAULT_STEP && event.keyCode === 40) || (maxNumber === LIMIT_VALUE && event.keyCode === 38)) {
 			event.preventDefault()
 		}
 
-		if (newMaxValue === LIMIT_VALUE - 1 || newMaxValue === DEFAULT_STEP + 1) {
+		if (maxNumber === LIMIT_VALUE - 1 || maxNumber === DEFAULT_STEP + 1) {
 			resetButtonDopClass()
 		}
 
@@ -122,17 +107,17 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 
 		// down - 40, up - 38
 
-		if ((newMinValue === DEFAULT_MIN && event.keyCode === 40) || (newMinValue === LIMIT_VALUE && event.keyCode === 38)) {
+		if ((minNumber === DEFAULT_MIN && event.keyCode === 40) || (minNumber === LIMIT_VALUE && event.keyCode === 38)) {
 			event.preventDefault()
 		}
 
-		if ((newMinValue !== DEFAULT_MIN && event.keyCode === 40) || (newMinValue !== LIMIT_VALUE && event.keyCode === 38)) {
+		if ((minNumber !== DEFAULT_MIN && event.keyCode === 40) || (minNumber !== LIMIT_VALUE && event.keyCode === 38)) {
 			setMinButtonDopClass('settings__button--active')
 		} else {
 			resetButtonDopClass()
 		}
 
-		if (newMinValue === LIMIT_VALUE + 1 || newMinValue === DEFAULT_MIN + 1) {
+		if (minNumber === LIMIT_VALUE + 1 || minNumber === DEFAULT_MIN + 1) {
 			resetButtonDopClass()
 		}
 
@@ -149,15 +134,15 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 		allOnKeyDownHandler(event)
 
 		// down - 40, up - 38
-		if (newStepValue === DEFAULT_STEP && event.keyCode === 40) {
+		if (stepNumber === DEFAULT_STEP && event.keyCode === 40) {
 			event.preventDefault()
 		}
 
-		if ((newStepValue === DEFAULT_MIN && event.keyCode === 40) || (event.keyCode === 38 && newStepValue === LIMIT_VALUE)) {
+		if ((stepNumber === DEFAULT_MIN && event.keyCode === 40) || (event.keyCode === 38 && stepNumber === LIMIT_VALUE)) {
 			event.preventDefault()
 		}
 
-		if ((event.keyCode === 40 && newStepValue > DEFAULT_MIN + 2) || (event.keyCode === 38 && newStepValue !== LIMIT_VALUE)) {
+		if ((event.keyCode === 40 && stepNumber > DEFAULT_MIN + 2) || (event.keyCode === 38 && stepNumber !== LIMIT_VALUE)) {
 			setStepButtonDopClass('settings__button--active')
 		} else {
 			resetButtonDopClass()
@@ -174,42 +159,42 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 
 	// PlusOnClick
 	const maxPlusOnClickHandler = useCallback(() => {
-		setNewMaxValue((actual) => actual + 1)
+		dispatch(increaseValueAC('maxValue', 1))
 		maxRef.current && maxRef.current.focus()
 	}, [maxRef])
 
 	const minPlusOnClickHandler = useCallback(() => {
-		setNewMinValue((actual) => actual + 1)
+		dispatch(increaseValueAC('minValue', 1))
 		minRef.current && minRef.current.focus()
 	}, [minRef])
 
 	const stepPlusOnClickHandler = useCallback(() => {
-		setNewStepValue((actual) => actual + 1)
+		dispatch(increaseValueAC('stepValue', 1))
 		stepRef.current && stepRef.current.focus()
 	}, [stepRef])
 
-	const maxMinusButtonDisabled = newMaxValue < DEFAULT_MIN + DEFAULT_STEP + DEFAULT_STEP
-	const maxPLusButtonDisabled = newMaxValue === LIMIT_VALUE
+	const maxMinusButtonDisabled = maxNumber < DEFAULT_MIN + DEFAULT_STEP + DEFAULT_STEP
+	const maxPLusButtonDisabled = maxNumber === LIMIT_VALUE
 
-	const minMinusButtonDisabled = newMinValue === DEFAULT_MIN
-	const minPLusButtonDisabled = newMinValue === LIMIT_VALUE
+	const minMinusButtonDisabled = minNumber === DEFAULT_MIN
+	const minPLusButtonDisabled = minNumber === LIMIT_VALUE
 
-	const stepMinusButtonDisabled = newStepValue === DEFAULT_MIN + 1
-	const stepPLusButtonDisabled = newStepValue === LIMIT_VALUE - 1
+	const stepMinusButtonDisabled = stepNumber === DEFAULT_MIN + 1
+	const stepPLusButtonDisabled = stepNumber === LIMIT_VALUE - 1
 
 	// MinusOnClick
 	const maxMinusOnClickHandler = useCallback(() => {
-		!maxMinusButtonDisabled && setNewMaxValue((actual) => actual - 1);
+		dispatch(decreaseValueAC('maxValue', 1))
 		maxRef.current && maxRef.current.focus()
 	}, [maxMinusButtonDisabled, maxRef])
 
 	const minMinusOnClickHandler = useCallback(() => {
-		!minMinusButtonDisabled && setNewMinValue((actual) => actual - 1);
+		dispatch(decreaseValueAC('minValue', 1))
 		minRef.current && minRef.current.focus()
 	}, [minMinusButtonDisabled, minRef])
 
 	const stepMinusOnClickHandler = useCallback(() => {
-		!stepMinusButtonDisabled && setNewStepValue((actual) => actual - 1);
+		dispatch(decreaseValueAC('stepValue', 1))
 		stepRef.current && stepRef.current.focus()
 	}, [stepMinusButtonDisabled, stepRef])
 
@@ -219,41 +204,43 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 		errorMin && setErrorMin('')
 		warning && setWarning('')
 
-		if (((newMaxValue - newMinValue) % newStepValue !== 0) && (newMaxValue >= newStepValue) && newMinValue < newMaxValue) {
+		dispatch(changeStatusStatisticsAC(false))
+
+		if (((maxNumber - minNumber) % stepNumber !== 0) && (maxNumber >= stepNumber) && minNumber < maxNumber) {
 			setWarning(warningMessage)
 		}
 
-		if (newMaxValue < newStepValue) {
+		if (maxNumber < stepNumber) {
 			setErrorMax(errorMessageGreaterMaxForStep)
 			setErrorStep(errorMessageGreaterStep)
 		}
 
-		if (newMinValue >= newMaxValue) {
+		if (minNumber >= maxNumber) {
 			setErrorMin(errorMessageLessMin)
 			setErrorMax(errorMessageGreaterMax)
 		}
 
-		if (newMinValue === DEFAULT_MIN && newMaxValue === DEFAULT_MAX && newStepValue === DEFAULT_STEP) {
+		if (minNumber === DEFAULT_MIN && maxNumber === DEFAULT_MAX && stepNumber === DEFAULT_STEP) {
 			setDefaultDisabled(true)
-		} else if (newMinValue !== DEFAULT_MIN || newMaxValue !== DEFAULT_MAX || newStepValue !== DEFAULT_STEP) {
+		} else if (minNumber !== DEFAULT_MIN || maxNumber !== DEFAULT_MAX || stepNumber !== DEFAULT_STEP) {
 			setDefaultDisabled(false)
 		}
 
 		return () => {}
-	}, [newMinValue, newMaxValue, newStepValue])
+	}, [minNumber, maxNumber, stepNumber])
 
 	useEffect(() => {
-		if ((newMaxValue === maxNumber && newMinValue === minNumber && newStepValue === stepNumber) || (newMaxValue < newStepValue || newMinValue >= newMaxValue)) {
+		if ((maxNumber === maxNumber && minNumber === minNumber && stepNumber === stepNumber) || (maxNumber < stepNumber || minNumber >= maxNumber)) {
 			setSaveDisabled(true)
 			props.notificationText === notificationForget && props.callbackForNotification(notificationCan)
 
-		} else if ((newMaxValue !== maxNumber || newMinValue !== minNumber || newStepValue !== stepNumber) || (newMaxValue >= newStepValue || newMinValue < newMaxValue)) {
+		} else if ((maxNumber !== maxNumber || minNumber !== minNumber || stepNumber !== stepNumber) || (maxNumber >= stepNumber || minNumber < maxNumber)) {
 			setSaveDisabled(false)
 			props.callbackForNotification(notificationForget)
 		}
 
 		return () => {}
-	}, [newMaxValue, newMinValue, newStepValue, maxNumber, minNumber, stepNumber])
+	}, [maxNumber, minNumber, stepNumber])
 
 	const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
 		event.currentTarget.value = event.currentTarget.value.replace(/^0/, '');
@@ -267,12 +254,12 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 			setErrorMax(errorMessageLength)
 
 			if (Array.from(event.currentTarget.value).length <= String(LIMIT_VALUE).split("").length) {
-				setNewMaxValue(Number(event.currentTarget.value))
+				dispatch(setValueAC('maxValue', Number(event.currentTarget.value)))
 			}
 		} else {
-			setNewMaxValue(Number(event.currentTarget.value))
+			dispatch(setValueAC('maxValue', Number(event.currentTarget.value)))
 		}
-	}, [onChangeHandler, LIMIT_VALUE, LIMIT_VALUE])
+	}, [onChangeHandler, LIMIT_VALUE])
 
 	const minOnChangeHandler = useCallback((event: ChangeEvent<HTMLInputElement>) => {
 		onChangeHandler(event)
@@ -281,10 +268,10 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 			setErrorMin(errorMessageLength)
 
 			if (Array.from(event.currentTarget.value).length <= String(LIMIT_VALUE).split("").length) {
-				setNewMinValue(Number(event.currentTarget.value))
+				dispatch(setValueAC('minValue', Number(event.currentTarget.value)))
 			}
 		} else {
-			setNewMinValue(Number(event.currentTarget.value))
+			dispatch(setValueAC('minValue', Number(event.currentTarget.value)))
 		}
 	}, [onChangeHandler, LIMIT_VALUE])
 
@@ -292,17 +279,17 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 		onChangeHandler(event)
 
 		if (event.currentTarget.value.length > 3) {
-			setNewStepValue(newStepValue)
+			dispatch(setValueAC('stepValue', stepNumber))
 		} else {
-			setNewStepValue(Number(event.currentTarget.value));
+			dispatch(setValueAC('stepValue', Number(event.currentTarget.value)))
 		}
 	}, [onChangeHandler])
 
 	// Settings
 	const saveSettings = useCallback(() => {
-		props.saveSettings(newMaxValue, newMinValue, newStepValue);
+		props.saveSettings(maxNumber, minNumber, stepNumber);
 		props.callbackForNotification(notificationSave)
-	}, [newMaxValue, newMinValue, newStepValue, notificationSave, props.saveSettings, props.callbackForNotification])
+	}, [maxNumber, minNumber, stepNumber, notificationSave, props.saveSettings, props.callbackForNotification])
 
 	const resetError = () => {
 		errorMax && setErrorMax('');
@@ -311,16 +298,16 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 	};
 
 	const defaultSettings = useCallback(() => {
-		setNewMaxValue(DEFAULT_MAX);
-		setNewMinValue(DEFAULT_MIN);
-		setNewStepValue(DEFAULT_STEP);
+		dispatch(setValueAC('maxValue', DEFAULT_MAX))
+		dispatch(setValueAC('minValue', DEFAULT_MIN))
+		dispatch(setValueAC('stepValue', DEFAULT_STEP))
 		props.saveSettings(DEFAULT_MAX, DEFAULT_MIN, DEFAULT_STEP);
 		props.callbackForNotification(notificationDefault);
 		resetError();
 	}, [DEFAULT_MAX, DEFAULT_MIN, DEFAULT_STEP, notificationDefault, props.saveSettings, props.callbackForNotification, resetError])
 
 	const randomSettings = useCallback(() => {
-		const randomMax = Math.floor(Math.random() * ( LIMIT_VALUE - newStepValue )) + newStepValue;
+		const randomMax = Math.floor(Math.random() * ( LIMIT_VALUE - stepNumber )) + stepNumber;
 		const randomMin = Math.floor(Math.random() * ( randomMax - stepNumber ));
 
 		let randomStep = 0;
@@ -328,13 +315,13 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 			randomStep = Math.floor(Math.random() * randomMax) + 1;
 		} while (( randomMax - randomMin ) % randomStep !== 0);
 
-		setNewMaxValue(randomMax);
-		setNewMinValue(randomMin);
-		setNewStepValue(randomStep);
+		dispatch(setValueAC('maxValue', randomMax))
+		dispatch(setValueAC('minValue', randomMin))
+		dispatch(setValueAC('stepValue', randomStep))
 		resetError();
 		props.saveSettings(randomMax, randomMin, randomStep);
 		props.callbackForNotification(notificationRandom);
-	}, [LIMIT_VALUE, newStepValue, stepNumber, resetError, props.saveSettings, props.callbackForNotification])
+	}, [LIMIT_VALUE, stepNumber, stepNumber, resetError, props.saveSettings, props.callbackForNotification])
 
 	return (
 		<form className="settings__form" action={'#'}>
@@ -344,7 +331,7 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 						labelText={"Enter max value"}
 						inputId={"max"}
 						error={errorMax}
-						newValue={newMaxValue}
+						newValue={maxNumber}
 						changeHandler={maxOnChangeHandler}
 						onKeyDown={maxOnKeyDownHandler}
 						link={maxRef}
@@ -355,13 +342,13 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 						minusButtonDisabled={maxMinusButtonDisabled}
 						plusOnClick={maxPlusOnClickHandler}
 						maxButtonDisabled={maxPLusButtonDisabled}
-						valueForInput={newMaxValue ? newMaxValue : 1}
+						valueForInput={maxNumber ? maxNumber : 1}
 					/>
 					<SettingsItem
 						labelText={"Enter min value"}
 						inputId={"min"}
 						error={errorMin}
-						newValue={newMinValue}
+						newValue={minNumber}
 						changeHandler={minOnChangeHandler}
 						onKeyDown={minOnKeyDownHandler}
 						link={minRef}
@@ -372,13 +359,13 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 						minusButtonDisabled={minMinusButtonDisabled}
 						plusOnClick={minPlusOnClickHandler}
 						maxButtonDisabled={minPLusButtonDisabled}
-						valueForInput={newMinValue}
+						valueForInput={minNumber}
 					/>
 					<SettingsItem
 						labelText={"Enter step"}
 						inputId={"step"}
 						error={errorStep}
-						newValue={newStepValue}
+						newValue={stepNumber}
 						changeHandler={stepOnChangeHandler}
 						onKeyDown={stepOnKeyDownHandler}
 						link={stepRef}
@@ -389,7 +376,7 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 						minusButtonDisabled={stepMinusButtonDisabled}
 						plusOnClick={stepPlusOnClickHandler}
 						maxButtonDisabled={stepPLusButtonDisabled}
-						valueForInput={newStepValue}
+						valueForInput={stepNumber}
 						warning={warning}
 					/>
 				</div>
