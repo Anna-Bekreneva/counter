@@ -2,9 +2,7 @@ import React, {memo, useCallback, useState} from 'react';
 import {SettingsForm} from './SettingsForm';
 import {Notification} from './Notification';
 
-type SettingsPropsType = {
-	saveSettings: (max: number, min: number, step: number) => void
-}
+type SettingsPropsType = {}
 
 export const Settings: React.FC<SettingsPropsType> = memo((props) => {
 	const [notificationText, setNotificationText] = useState('You can manage settings')
@@ -15,7 +13,7 @@ export const Settings: React.FC<SettingsPropsType> = memo((props) => {
 		<div className='settings'>
 			<h2 className='title'>Settings</h2>
 			<Notification text={notificationText}/>
-			<SettingsForm saveSettings={props.saveSettings} callbackForNotification={callbackForNotification} notificationText={notificationText}></SettingsForm>
+			<SettingsForm callbackForNotification={callbackForNotification} notificationText={notificationText}></SettingsForm>
 		</div>
 	)
 })

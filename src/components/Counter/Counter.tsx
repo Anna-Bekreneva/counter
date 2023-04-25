@@ -1,12 +1,9 @@
 import React, {memo} from 'react';
 import {CounterManagement} from './CounterManagement';
 import {Tablo} from './Tablo';
-import {ButtonCounterType} from '../../App';
 import {Statistics} from './Statistics';
 
-type CounterPropsType = {
-	buttonCounterOnClickCallback: (type: ButtonCounterType) => void
-}
+type CounterPropsType = {}
 
 export const Counter: React.FC<CounterPropsType> = memo((props) => {
 	return (
@@ -14,7 +11,7 @@ export const Counter: React.FC<CounterPropsType> = memo((props) => {
 			<h2 className="title">Tablo</h2>
 			<Statistics/>
 			<Tablo/>
-			<CounterManagement buttonCounterOnClickCallback={props.buttonCounterOnClickCallback}></CounterManagement>
+			<CounterManagement/>
 		</div>
 	)
 })

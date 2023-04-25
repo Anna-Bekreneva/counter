@@ -8,7 +8,7 @@ type settingsItemPropsType = {
 	newValue: number
 	changeHandler: (event: ChangeEvent<HTMLInputElement>) => void
 	onKeyDown: (event: KeyboardEvent<HTMLInputElement>) => void
-	link: any
+	link: React.RefObject<HTMLInputElement>
 	resetButtonDopClass: () => void
 	whichButtonDopClass: 'plus' | 'minus' | null
 	buttonDopClass: string
@@ -16,7 +16,6 @@ type settingsItemPropsType = {
 	plusOnClick: () => void
 	minusButtonDisabled: boolean
 	maxButtonDisabled: boolean
-	valueForInput: number
 	warning?: string
 }
 
@@ -28,7 +27,7 @@ export const SettingsItem: React.FC<settingsItemPropsType> = memo((props) => {
 				<div className={props.error ? 'settings__field field field--error' : 'settings__field field'}>
 					{props.warning && <Warning text={props.warning}></Warning>}
 					<button className={props.whichButtonDopClass === 'minus' ? `settings__button settings__button--minus button ${props.buttonDopClass}` : 'settings__button settings__button--minus button'} type="button" onClick={props.minusOnClick} disabled={props.minusButtonDisabled}>-</button>
-					<input className="settings__input" id={props.inputId} value={props.valueForInput} onChange={props.changeHandler} onKeyDown={props.onKeyDown} ref={props.link} onBlur={props.resetButtonDopClass} name="max" type="number"/>
+					<input className="settings__input" id={props.inputId} value={props.newValue} onChange={props.changeHandler} onKeyDown={props.onKeyDown} ref={props.link} onBlur={props.resetButtonDopClass} name="max" type="number"/>
 					<button className={props.whichButtonDopClass === 'plus' ? `settings__button settings__button--plus button ${props.buttonDopClass}` : 'settings__button settings__button--plus button'} type="button" onClick={props.plusOnClick} disabled={props.maxButtonDisabled}>+</button>
 				</div>
 			</div>
