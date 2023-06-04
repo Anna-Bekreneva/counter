@@ -1,5 +1,4 @@
-import React, {memo, useCallback} from 'react';
-import {ButtonCounterType} from '../../App';
+import React, {memo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from "../../state/store";
 import {setValueAC} from '../../state/valuesReducer';
@@ -20,7 +19,6 @@ export const CounterManagement: React.FC<ManagementPropsType> = memo((props) => 
 	const incOnClickHandler = () => {
 		if (counter <= maxNumber - stepNumber && counter >= minNumber) {
 			dispatch(setValueAC('counter', counter + stepNumber))
-			localStorage.setItem('counter', (counter + stepNumber).toString())
 			dispatch(clickIncreaseButtonAC())
 			!isRunStatistics && dispatch(changeStatusStatisticsAC(true))
 		}
@@ -28,14 +26,12 @@ export const CounterManagement: React.FC<ManagementPropsType> = memo((props) => 
 
 	const decOnClickHandler = () => {
 		counter > minNumber && dispatch(setValueAC('counter', counter - stepNumber))
-		localStorage.setItem('counter', (counter - stepNumber).toString())
 		dispatch(clickDecreaseButtonAC())
 		!isRunStatistics && dispatch(changeStatusStatisticsAC(true))
 	}
 
 	const resOnClickHandler = () => {
 		dispatch(setValueAC('counter', minNumber))
-		localStorage.setItem('counter', minNumber.toString())
 	}
 
 	const disabledInc = counter + stepNumber > maxNumber || counter === maxNumber

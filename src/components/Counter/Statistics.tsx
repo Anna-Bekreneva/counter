@@ -1,11 +1,10 @@
-import React, {memo, useEffect, useState} from 'react';
+import React, {memo, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from '../../state/store';
-import {setValueAC} from '../../state/valuesReducer';
 import {
 	changeStatusStatisticsAC,
-	clickIncreaseButtonAC,
-	setStatisticsAC, setStatisticsClickAC,
+	setStatisticsAC,
+	setStatisticsClickAC,
 	setStatisticsNumberAC
 } from '../../state/statisticsReducer';
 
@@ -41,27 +40,19 @@ export const Statistics: React.FC<StaticsPropsType> = memo((props) => {
 	}, [counter, minNumber])
 
 	useEffect(() => {
-		const isRunStatistics = localStorage.getItem('isRunStatistics')
-		dispatch(changeStatusStatisticsAC(isRunStatistics === 'true'))
+		if (isRunStatistics) {
+			dispatch(changeStatusStatisticsAC(isRunStatistics))
+		}
 
-
-		const increaseButtonPressed = localStorage.getItem('increaseButtonPressed')
 		if (increaseButtonPressed) {
 			dispatch(setStatisticsAC('increaseButtonPressed', Number(increaseButtonPressed)))
 		}
 
-		const decreaseButtonPressed = localStorage.getItem('decreaseButtonPressed')
 		if (decreaseButtonPressed) {
 			dispatch(setStatisticsAC('decreaseButtonPressed', Number(decreaseButtonPressed)))
 		}
 		return () => {}
 	}, [])
-
-	useEffect(() => {
-		localStorage.setItem('increaseButtonPressed', increaseButtonPressed.toString())
-		localStorage.setItem('decreaseButtonPressed', decreaseButtonPressed.toString())
-		localStorage.setItem('isRunStatistics', isRunStatistics.toString())
-	})
 
 	const result = isRunStatistics ?
 		<>

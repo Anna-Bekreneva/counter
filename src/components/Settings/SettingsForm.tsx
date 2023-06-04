@@ -4,6 +4,7 @@ import {SettingsItem} from './SettingsItem';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from '../../state/store';
 import {
+	errorMessageDenyStep,
 	errorMessageGreaterMax,
 	errorMessageGreaterMaxForStep,
 	errorMessageGreaterStep,
@@ -15,7 +16,7 @@ import {
 	notificationRandom,
 	notificationSave,
 	warningMessage
-} from '../../utilities';
+} from '../../utils/messages';
 import {setValueAC} from '../../state/valuesReducer';
 import {changeStatusStatisticsAC, resetStatisticsAC} from '../../state/statisticsReducer';
 
@@ -88,34 +89,11 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 
 	useEffect(() => {
 		setNewStepValue(stepNumber)
+		setNewStepValue(stepNumber)
 		return () => {}
 	}, [stepNumber])
 
 	const falseStatusStatistics = () => dispatch(changeStatusStatisticsAC(false))
-
-	useEffect(() => {
-		const maxValue = localStorage.getItem('maxValue')
-		if (maxValue) {
-			dispatch(setValueAC('maxValue', Number(maxValue)))
-		}
-
-		const minValue = localStorage.getItem('minValue')
-		if (minValue) {
-			dispatch(setValueAC('minValue', Number(minValue)))
-		}
-
-		const stepValue = localStorage.getItem('stepValue')
-		if (stepValue) {
-			dispatch(setValueAC('stepValue', Number(stepValue)))
-		}
-
-		const counterValue = localStorage.getItem('counter')
-		if (counterValue) {
-			dispatch(setValueAC('counter', Number(counterValue)))
-		}
-
-		return () => {}
-	}, [])
 
 	// OnKeyDown
 	const allOnKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -231,7 +209,7 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 	const minMinusButtonDisabled = newMinValue === DEFAULT_MIN
 	const minPLusButtonDisabled = newMinValue === LIMIT_VALUE
 
-	const stepMinusButtonDisabled = newStepValue === DEFAULT_MIN + 1
+	const stepMinusButtonDisabled = newStepValue === DEFAULT_MIN
 	const stepPLusButtonDisabled = newStepValue === LIMIT_VALUE - 1
 
 	// MinusOnClick
@@ -285,14 +263,16 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 		if ((newMaxValue === maxNumber && newMinValue === minNumber && newStepValue === stepNumber) || (newMaxValue < newStepValue || newMinValue >= newMaxValue)) {
 			setSaveDisabled(true)
 			props.notificationText === notificationForget && props.callbackForNotification(notificationCan)
-
-		} else if ((newMaxValue !== maxNumber || newMinValue !== minNumber || newStepValue !== stepNumber) || (newMaxValue >= newStepValue || newMinValue < newMaxValue)) {
+		} else if (newStepValue < DEFAULT_STEP) {
+			setSaveDisabled(true)
+		}
+		else if ((newMaxValue !== maxNumber || newMinValue !== minNumber || newStepValue !== stepNumber) || (newMaxValue >= newStepValue || newMinValue < newMaxValue)) {
 			setSaveDisabled(false)
 			props.callbackForNotification(notificationForget)
 		}
 
 		return () => {}
-	}, [newMaxValue, newMinValue, newStepValue, maxNumber, minNumber, stepNumber])
+	}, [newMaxValue, newMinValue, newStepValue, maxNumber, minNumber, stepNumber, DEFAULT_STEP])
 
 	const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
 		event.currentTarget.value = event.currentTarget.value.replace(/^0/, '');
@@ -333,7 +313,11 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 
 		if (event.currentTarget.value.length > 3) {
 			setNewStepValue(newStepValue)
-		} else {
+		} else if (Number(event.currentTarget.value) < DEFAULT_STEP) {
+			setErrorStep(errorMessageDenyStep)
+			setNewStepValue(Number(event.currentTarget.value));
+		}
+		else {
 			setNewStepValue(Number(event.currentTarget.value));
 		}
 	}, [onChangeHandler, newStepValue])
@@ -351,11 +335,6 @@ export const SettingsForm: React.FC<SettingsFormPropsType> = (props) => {
 
 		dispatch(changeStatusStatisticsAC(true))
 		dispatch(resetStatisticsAC())
-
-		localStorage.setItem('maxValue', max.toString())
-		localStorage.setItem('minValue', min.toString())
-		localStorage.setItem('stepValue', step.toString())
-		localStorage.setItem('counter', min.toString())
 	}
 
 	const clickSaveSettings = useCallback(() => {

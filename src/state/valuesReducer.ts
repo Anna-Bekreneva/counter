@@ -13,11 +13,11 @@ type IncreaseValueAT = ReturnType<typeof increaseValueAC>
 type DecreaseValueAT = ReturnType<typeof decreaseValueAC>
 type SetValueAT = ReturnType<typeof setValueAC>
 
-type ActionsTypes = IncreaseValueAT | DecreaseValueAT | SetValueAT
+type ValuesActionsType = IncreaseValueAT | DecreaseValueAT | SetValueAT
 
 const initialState: ValuesStateType = {maxValue: 5, stepValue: 1, minValue: 0, counter: 0, defaultMin: 0, defaultMax: 5, defaultStep: 1, limitValue: 300}
 
-export const valuesReducer = (state: ValuesStateType = initialState, action: ActionsTypes): ValuesStateType => {
+export const valuesReducer = (state: ValuesStateType = initialState, action: ValuesActionsType): ValuesStateType => {
     switch (action.type) {
         case "INCREASE-VALUE": {
             return {...state, [action.value] : state[action.value] + action.step}
