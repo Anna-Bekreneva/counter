@@ -1,16 +1,16 @@
 html {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 *,
 *::before,
 *::after {
-    box-sizing: inherit;
+  box-sizing: inherit;
 }
 
 ul,
 ol {
-    padding: 0;
+  padding: 0;
 }
 
 body,
@@ -24,11 +24,11 @@ p,
 ul,
 ol,
 li {
-    margin: 0;
+  margin: 0;
 }
 
 ul {
-    list-style: none;
+  list-style: none;
 }
 
 h1,
@@ -37,44 +37,44 @@ h3,
 h4,
 h5,
 h6 {
-    font: inherit;
+  font: inherit;
 }
 
 img {
-    max-width: 100%;
+  max-width: 100%;
 }
 
 input,
 button {
-    color: inherit;
-    font: inherit;
+  color: inherit;
+  font: inherit;
 }
 
 a {
-    color: inherit;
-    text-decoration: none;
+  color: inherit;
+  text-decoration: none;
 }
 
 button,
 input {
-    display: inline-block;
-    padding: 0;
-    background-color: transparent;
-    border: 0;
+  display: inline-block;
+  padding: 0;
+  background-color: transparent;
+  border: 0;
 }
 
 button:focus,
 input:focus {
-    outline: 0;
+  outline: 0;
 }
 
 button {
-    cursor: pointer;
-    appearance: none;
+  cursor: pointer;
+  appearance: none;
 }
 
 input {
-    margin: 0;
+  margin: 0;
 }
 
 /*input[type="number"]::-webkit-outer-spin-button,*/

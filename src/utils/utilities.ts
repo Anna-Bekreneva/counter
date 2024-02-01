@@ -3,7 +3,6 @@ export const errorMessageGreaterMax = 'This value must be greater than the min v
 export const errorMessageLessMin = 'This value must be less than the max value'
 export const errorMessageLength = "It's number very big"
 export const errorMessageGreaterStep = 'The step must be less than the maximum number'
-export const errorMessageDenyStep = 'The step must be greater than zero'
 export const errorMessageGreaterMaxForStep = 'The max value must be greater than the step'
 
 export const notificationRandom = 'Random settings set'

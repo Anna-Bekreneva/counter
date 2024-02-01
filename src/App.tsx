@@ -1,26 +1,27 @@
-import React from 'react';
-import './styles/global.css';
-import './styles/reset.css';
-import './styles/counter.css';
-import './styles/settings.css';
-import './styles/statistics.css';
-import {Counter} from './components/Counter/Counter';
-import {Settings} from './components/Settings/Settings';
+import React from 'react'
 
-export type ButtonCounterType = 'inc' | 'dec' | 'res'
+// todo: why so many styles
+import './styles/counter.css'
+import './styles/global.css'
+import './styles/reset.css'
+import './styles/settings.css'
+import './styles/statistics.css'
 
-function App () {
-	return (
-		<div className='wrapper'>
-			<div className='container'>
-				<h1 className='heading'>Counter</h1>
-				<div className='wrapper__container'>
-					<Settings></Settings>
-					<Counter></Counter>
-				</div>
-			</div>
-		</div>
-	);
+import { Counter } from './features'
+import { Settings } from './features'
+
+function App() {
+  return (
+    <div className={'wrapper'}>
+      <div className={'container'}>
+        <h1 className={'heading'}>Counter</h1>
+        <div className={'wrapper__container'}>
+          <Settings></Settings>
+          <Counter></Counter>
+        </div>
+      </div>
+    </div>
+  )
 }
 
-export default App;
+export default App

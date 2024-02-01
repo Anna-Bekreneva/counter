@@ -1,21 +1,21 @@
 .remained {
-    display: flex;
-    justify-content: center;
-    position: absolute;
-    bottom: 20px;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  bottom: 20px;
+  align-items: center;
 }
 
 .remained__text {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 .remained__button {
-    padding: 8px 16px;
+  padding: 8px 16px;
 }
 
-@media(max-width: 580px) {
-    .remained {
-        bottom: 16px;
-    }
+@media (max-width: 580px) {
+  .remained {
+    bottom: 16px;
+  }
 }

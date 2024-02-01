@@ -1,199 +1,205 @@
 body {
-    background-color: #343838;
-    color: #ffffff;
-    line-height: 1.3;
-    font-weight: 400;
-    font-size: 18px;
-    font-family: 'Montserrat', 'Roboto', sans-serif;
+  background-color: #343838;
+  color: #ffffff;
+  line-height: 1.3;
+  font-weight: 400;
+  font-size: 18px;
+  font-family: 'Montserrat', 'Roboto', sans-serif;
 }
 
 .wrapper {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    overflow: hidden;
-    padding: 80px 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow: hidden;
+  padding: 80px 0;
 }
 
 .container {
-    max-width: 1230px;
-    width: 100%;
-    margin: 0 auto;
-    padding: 0 15px;
+  max-width: 1230px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 15px;
 }
 
 .heading {
-    font-size: 56px;
-    font-weight: 700;
-    margin-bottom: 60px;
-    text-align: center;
+  font-size: 56px;
+  font-weight: 700;
+  margin-bottom: 60px;
+  text-align: center;
 }
 
 .title {
-    font-size: 38px;
-    font-weight: 600;
-    margin-bottom: 36px;
-    text-align: center;
+  font-size: 38px;
+  font-weight: 600;
+  margin-bottom: 36px;
+  text-align: center;
 }
 
 .wrapper__container {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 .tablo {
-    height: 280px;
-    width: 100%;
-    padding: 20px;
-    border-radius: 20px;
-    background-color: #005f6b;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 3px 10px 1px rgba(52, 56, 56, 0.06);
-    margin-bottom: 34px;
+  height: 280px;
+  width: 100%;
+  padding: 20px;
+  border-radius: 20px;
+  background-color: #005f6b;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 3px 10px 1px rgba(52, 56, 56, 0.06);
+  margin-bottom: 34px;
 }
 
 .tablo--mini {
-    background-color: #005f6b;
-    margin-bottom: 24px;
-    border-radius: 12px;
-    padding: 16px;
-    min-height: 82px;
-    height: auto;
+  background-color: #005f6b;
+  margin-bottom: 24px;
+  border-radius: 12px;
+  padding: 16px;
+  min-height: 82px;
+  height: auto;
 }
 
 .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: 1px;
-    padding: 0;
-    overflow: hidden;
-    white-space: nowrap;
-    border: 0;
-    clip: rect(0 0 0 0);
-    clip-path: inset(100%);
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 1px;
+  padding: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(100%);
 }
 
 .button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    background-color:  #00dffc;
-    color: #343838;
-    font-weight: 500;
-    box-shadow: 0 4px 5px 5px rgba(0, 0, 0, 0.14);
-    transition: transform 0.4s, box-shadow 0.4s, opacity 0.4s, background-color 0.4s, color 0.4s, border-color 0.4s;
-    border: 2px solid transparent;
-    padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background-color: #00dffc;
+  color: #343838;
+  font-weight: 500;
+  box-shadow: 0 4px 5px 5px rgba(0, 0, 0, 0.14);
+  transition:
+    transform 0.4s,
+    box-shadow 0.4s,
+    opacity 0.4s,
+    background-color 0.4s,
+    color 0.4s,
+    border-color 0.4s;
+  border: 2px solid transparent;
+  padding: 12px 24px;
 }
 
 .button:focus {
-    background-color: #005F6B;
-    color: #ffffff;
-    border-color: #00dffc;
+  background-color: #005f6b;
+  color: #ffffff;
+  border-color: #00dffc;
 }
 
 .button:hover {
-    transform: translateY(-5px);
+  transform: translateY(-5px);
 }
 
 .button:active {
-    transform: scale(96%);
+  transform: scale(96%);
 }
 
 .button:disabled {
-    opacity: 0.5;
-    box-shadow: none;
-    pointer-events: none;
+  opacity: 0.5;
+  box-shadow: none;
+  pointer-events: none;
 }
 
 .field {
-    background-color: #008c9e;
-    padding: 10px 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 4px rgba(52, 56, 56, 0.25);
-    transition: color 0.4s;
-    text-align: center;
+  background-color: #008c9e;
+  padding: 10px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 4px rgba(52, 56, 56, 0.25);
+  transition: color 0.4s;
+  text-align: center;
 }
 
 .field--error {
-    box-shadow: 0 0 0 2px #ef1608;
+  box-shadow: 0 0 0 2px #ef1608;
 }
 
 .field--error .settings__input {
-    color: #ef1608;
+  color: #ef1608;
 }
 
 .field::placeholder {
-    color: #ffffff;
-    text-align: center;
+  color: #ffffff;
+  text-align: center;
 }
 
 .field:focus {
-    box-shadow: 0 0 0 2px #00dffc;
-    outline: 0;
+  box-shadow: 0 0 0 2px #00dffc;
+  outline: 0;
 }
 
 .management {
-    display: flex;
+  display: flex;
 }
 
 .management__button {
-    width: 100%;
+  width: 100%;
 }
 
 .management__button:not(:last-child) {
-    margin-right: 16px;
+  margin-right: 16px;
 }
 
-@media(max-width: 1200px) {
-    .body {
-        font-size: 18px;
-    }
+@media (max-width: 1200px) {
+  .body {
+    font-size: 18px;
+  }
 
-    .wrapper {
-        padding: 40px 0;
-    }
+  .wrapper {
+    padding: 40px 0;
+  }
 
-    .heading {
-        font-size: 40px;
-        margin-bottom: 40px;
-    }
+  .heading {
+    font-size: 40px;
+    margin-bottom: 40px;
+  }
 
-    .title {
-        font-size: 32px;
-        margin-bottom: 24px;
-    }
+  .title {
+    font-size: 32px;
+    margin-bottom: 24px;
+  }
 
-    .wrapper__container {
-        flex-direction: column;
-        align-items: center;
-    }
+  .wrapper__container {
+    flex-direction: column;
+    align-items: center;
+  }
 
-    .tablo {
-        height: auto;
-        margin-bottom: 20px;
-    }
+  .tablo {
+    height: auto;
+    margin-bottom: 20px;
+  }
 
-    .tablo--mini {
-        min-height: auto;
-    }
+  .tablo--mini {
+    min-height: auto;
+  }
 }
 
-@media(max-width: 580px) {
-    .management {
-        flex-direction: column;
-    }
+@media (max-width: 580px) {
+  .management {
+    flex-direction: column;
+  }
 
-    .management__button {
-        width: 100%;
-    }
+  .management__button {
+    width: 100%;
+  }
 
-    .management__button:not(:last-child) {
-        margin-right: 0;
-        margin-bottom: 12px;
-    }
+  .management__button:not(:last-child) {
+    margin-right: 0;
+    margin-bottom: 12px;
+  }
 }

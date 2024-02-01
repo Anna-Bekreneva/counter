@@ -1,43 +1,41 @@
 .counter {
-    max-width: 570px;
-    width: 100%;
+  max-width: 570px;
+  width: 100%;
 }
 
 .counter-tablo {
-    position: relative;
+  position: relative;
 }
 
 .counter-tablo__number {
-    font-size: 46px;
-    font-weight: 600;
+  font-size: 46px;
+  font-weight: 600;
 }
 
 .counter-tablo__number--active {
-    color: #c91307;
-    transition: color 0.4s;
+  color: #c91307;
+  transition: color 0.4s;
 }
 
 .counter-tablo__text {
-    position: absolute;
-    top: 40px;
-    left: 50%;
-    transform: translateX(-50%);
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
-@media(max-width: 1200px) {
-    .counter-tablo__number {
-        font-size: 40px;
-    }
+@media (max-width: 1200px) {
+  .counter-tablo__number {
+    font-size: 40px;
+  }
 
-    .counter-tablo {
-        height: 200px;
-    }
+  .counter-tablo {
+    height: 200px;
+  }
 }
 
-@media(max-width: 580px) {
-    .counter-tablo__number {
-        font-size: 32px;
-    }
+@media (max-width: 580px) {
+  .counter-tablo__number {
+    font-size: 32px;
+  }
 }
-
-

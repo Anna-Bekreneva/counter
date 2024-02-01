@@ -1,30 +1,34 @@
-import {combineReducers, createStore} from "redux";
-import {valuesReducer} from "./valuesReducer";
-import {statisticsReducer} from "./statisticsReducer";
-import {loadState, saveState} from "../utils/localstorage";
+import { combineReducers, createStore } from 'redux'
+
+import { loadState, saveState } from '../utils/localstorage'
+import { statisticsReducer } from './statistics/statisticsReducer'
+import { valuesReducer } from './values/valuesReducer'
+import {TypedUseSelectorHook, useSelector} from "react-redux";
 
 const rootReducer = combineReducers({
-    values: valuesReducer,
-    statistics: statisticsReducer
+  statistics: statisticsReducer,
+  values: valuesReducer,
 })
 
 let preloadedState
-const persistedTodosString  = localStorage.getItem('app-state')
+const persistedTodosString = localStorage.getItem('app-state')
+
 if (persistedTodosString) {
-    preloadedState = JSON.parse(persistedTodosString)
+  preloadedState = JSON.parse(persistedTodosString)
 }
 
 export const store = createStore(rootReducer, loadState())
 
 store.subscribe(() => {
-    saveState({
-        values: store.getState().values,
-        statistics: store.getState().statistics,
-    })
-    localStorage.setItem('app-state', JSON.stringify(store.getState()))
+  saveState({
+    statistics: store.getState().statistics,
+    values: store.getState().values,
+  })
+  localStorage.setItem('app-state', JSON.stringify(store.getState()))
 })
 
 export type AppRootStateType = ReturnType<typeof rootReducer>
+export const useAppSelector: TypedUseSelectorHook<AppRootStateType> = useSelector
 
 // @ts-ignore
 window.store = store
