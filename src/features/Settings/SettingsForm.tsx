@@ -12,36 +12,19 @@ export const SettingsForm: FC<SettingsFormPropsType> = props => {
 
   const {
     isDopClassForButton,
-    maxOnChangeHandler,
-    minOnChangeHandler,
-    stepOnChangeHandler,
+    changeHandlers,
     warning,
     activeButton,
     saveDisabled,
     defaultDisabled,
-    newMaxValue,
-    newMinValue,
-    newStepValue,
-    maxOnKeyDownHandler,
-    minOnKeyDownHandler,
-    stepOnKeyDownHandler,
-    maxPlusOnClickHandler,
-    minPlusOnClickHandler,
-    stepPlusOnClickHandler,
-    maxMinusButtonDisabled,
-    maxPLusButtonDisabled,
-    minMinusButtonDisabled,
-    minPLusButtonDisabled,
-    stepMinusButtonDisabled,
-    stepPLusButtonDisabled,
-    maxMinusOnClickHandler,
-    minMinusOnClickHandler,
-    stepMinusOnClickHandler,
+    newValues,
+    keyDownHandlers,
+    buttonPlusHandler,
+    disabledButtons,
+    buttonMinusHandler,
     errors,
-    maxRef,
     resetButtonDopClass,
-    minRef,
-    stepRef,
+    fieldRefs,
     defaultSettings,
     randomSettings,
     clickSaveSettings
@@ -55,51 +38,51 @@ export const SettingsForm: FC<SettingsFormPropsType> = props => {
           <SettingsItem
             key={'max'}
             isDopClassForButton={isDopClassForButton}
-            changeHandler={maxOnChangeHandler}
+            changeHandler={changeHandlers.max}
             error={errors.max}
             inputId={'max'}
             labelText={'Enter max value'}
-            link={maxRef}
-            maxButtonDisabled={maxPLusButtonDisabled}
-            minusButtonDisabled={maxMinusButtonDisabled}
-            minusOnClick={maxMinusOnClickHandler}
-            newValue={newMaxValue}
-            onKeyDown={maxOnKeyDownHandler}
-            plusOnClick={maxPlusOnClickHandler}
+            link={fieldRefs.max}
+            maxButtonDisabled={disabledButtons.maxPLus}
+            minusButtonDisabled={disabledButtons.maxMinus}
+            minusOnClick={() => buttonMinusHandler('max')}
+            newValue={newValues.max}
+            onKeyDown={keyDownHandlers.max}
+            plusOnClick={() => buttonPlusHandler("max")}
             resetButtonDopClass={resetButtonDopClass}
             whichButtonDopClass={activeButton.field === 'max' ? activeButton.button : null}
           />
           <SettingsItem
             key={'min'}
             isDopClassForButton={isDopClassForButton}
-            changeHandler={minOnChangeHandler}
+            changeHandler={changeHandlers.min}
             error={errors.min}
             inputId={'min'}
             labelText={'Enter min value'}
-            link={minRef}
-            maxButtonDisabled={minPLusButtonDisabled}
-            minusButtonDisabled={minMinusButtonDisabled}
-            minusOnClick={minMinusOnClickHandler}
-            newValue={newMinValue}
-            onKeyDown={minOnKeyDownHandler}
-            plusOnClick={minPlusOnClickHandler}
+            link={fieldRefs.min}
+            maxButtonDisabled={disabledButtons.minPLus}
+            minusButtonDisabled={disabledButtons.minMinus}
+            minusOnClick={() => buttonMinusHandler('min')}
+            newValue={newValues.min}
+            onKeyDown={keyDownHandlers.min}
+            plusOnClick={() => buttonPlusHandler("min")}
             resetButtonDopClass={resetButtonDopClass}
             whichButtonDopClass={activeButton.field === 'min' ? activeButton.button : null}
           />
           <SettingsItem
             key={'step'}
             isDopClassForButton={isDopClassForButton}
-            changeHandler={stepOnChangeHandler}
+            changeHandler={changeHandlers.step}
             error={errors.step}
             inputId={'step'}
             labelText={'Enter step'}
-            link={stepRef}
-            maxButtonDisabled={stepPLusButtonDisabled}
-            minusButtonDisabled={stepMinusButtonDisabled}
-            minusOnClick={stepMinusOnClickHandler}
-            newValue={newStepValue}
-            onKeyDown={stepOnKeyDownHandler}
-            plusOnClick={stepPlusOnClickHandler}
+            link={fieldRefs.step}
+            maxButtonDisabled={disabledButtons.stepPLus}
+            minusButtonDisabled={disabledButtons.stepMinus}
+            minusOnClick={() => buttonMinusHandler('step')}
+            newValue={newValues.step}
+            onKeyDown={keyDownHandlers.step}
+            plusOnClick={() => buttonPlusHandler("step")}
             resetButtonDopClass={resetButtonDopClass}
             warning={warning}
             whichButtonDopClass={activeButton.field === 'step' ? activeButton.button : null}
@@ -112,7 +95,7 @@ export const SettingsForm: FC<SettingsFormPropsType> = props => {
         randomSettings={randomSettings}
         saveDisabled={saveDisabled}
         saveSettings={clickSaveSettings}
-      ></SettingsManagement>
+      />
     </form>
   )
 }

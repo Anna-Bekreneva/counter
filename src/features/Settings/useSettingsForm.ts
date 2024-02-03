@@ -8,7 +8,14 @@ import {
     selectMaxValue, selectMinValue, selectStepValue, setValueAC,
     useAppSelector
 } from "../../state";
-import React, {ChangeEvent, KeyboardEvent, LegacyRef, useCallback, useEffect, useState} from "react";
+import React, {
+    ChangeEvent,
+    KeyboardEvent,
+    RefObject,
+    useCallback,
+    useEffect,
+    useState
+} from "react";
 import {
     errorMessageDenyStep,
     errorMessageGreaterMax,
@@ -38,15 +45,20 @@ export const useSettingsForm = (callbackForNotification: (text: string) => void,
     }
     const [errors, setErrors] = useState<typeof initialErrors>(initialErrors)
 
-    const maxRef: LegacyRef<HTMLInputElement> | undefined = React.createRef()
-    const minRef: LegacyRef<HTMLInputElement> | undefined = React.createRef()
-    const stepRef: LegacyRef<HTMLInputElement> | undefined = React.createRef()
+    type FieldRefsType = {
+        [ key: string ] : RefObject<HTMLInputElement> | null
+    }
+    const fieldRefs: FieldRefsType = {
+        max: React.createRef(),
+        min: React.createRef(),
+        step: React.createRef()
+    }
 
     const [isDopClassForButton, setIsDopClassForButton] = useState(false)
-
+    type FieldType = 'max' | 'min' | 'step'
     const initialActiveButton = {
         button: null as 'minus' | 'plus' | null,
-        field: null as 'max' | 'min' | 'step' | null,
+        field: null as FieldType | null,
     }
     const [activeButton, setActiveButton] = useState(initialActiveButton)
 
@@ -83,185 +95,132 @@ export const useSettingsForm = (callbackForNotification: (text: string) => void,
 
     const falseStatusStatistics = () => dispatch(changeStatusStatisticsAC(false))
 
-    // OnKeyDown
-    const allKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
-        const symbolsForExcept = [',', '-', '+', '.']
+    const _allKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => ({
+        checkIncludeSymbols: () => {
+            const symbolsForExcept = [',', '-', '+', '.']
 
-        symbolsForExcept.includes(event.key) && event.preventDefault()
-        falseStatusStatistics()
-    }
+            symbolsForExcept.includes(event.key) && event.preventDefault()
+            falseStatusStatistics()
+        },
+        changeActiveButton: (field: FieldType) => {
+            if (event.keyCode === 38) {
+                setActiveButton({ button: 'plus', field })
+            }
 
-    const allKeyDownHandler2 = (event: KeyboardEvent<HTMLInputElement>, field: 'max' | 'min' | 'step') => {
-        if (event.keyCode === 38) {
-            setActiveButton({ button: 'plus', field })
+            if (event.keyCode === 40) {
+                setActiveButton({ button: 'minus', field })
+            }
+        },
+        compareValues: (newValue: number, defMin: number = defaultMin) => {
+            if (
+                (newValue === defMin && event.keyCode === 40) ||
+                (newValue === limitValue && event.keyCode === 38)
+            ) {
+                event.preventDefault()
+            }
+
+            if (
+                (newValue !== defMin && event.keyCode === 40) ||
+                (newValue !== limitValue && event.keyCode === 38)
+            ) {
+                setIsDopClassForButton(true)
+            } else {
+                resetButtonDopClass()
+            }
         }
+    })
 
-        if (event.keyCode === 40) {
-            setActiveButton({ button: 'minus', field })
-        }
-    }
-
-    const allKeyDownHandler3 = (event: KeyboardEvent<HTMLInputElement>, newValue: number, defMin: number = defaultMin) => {
-        if (
-            (newValue === defMin && event.keyCode === 40) ||
-            (newValue === limitValue && event.keyCode === 38)
-        ) {
-            event.preventDefault()
-        }
-
-        if (
-            (newValue !== defMin && event.keyCode === 40) ||
-            (newValue !== limitValue && event.keyCode === 38)
-        ) {
-            setIsDopClassForButton(true)
-        } else {
-            resetButtonDopClass()
-        }
-    }
-
-    const maxOnKeyDownHandler = useCallback(
+    const maxKeyDownHandler = useCallback(
         (event: KeyboardEvent<HTMLInputElement>) => {
-            allKeyDownHandler(event)
-            // down - 40, up - 38
-
-            // if (
-            //     (newMaxValue !== defaultStep && event.keyCode === 40) ||
-            //     (newMaxValue !== limitValue && event.keyCode === 38)
-            // ) {
-            //     setIsDopClassForButton(true)
-            // } else {
-            //     resetButtonDopClass()
-            // }
-            //
-            // if (
-            //     (newMaxValue === defaultStep && event.keyCode === 40) ||
-            //     (newMaxValue === limitValue && event.keyCode === 38)
-            // ) {
-            //     event.preventDefault()
-            // }
-
-            allKeyDownHandler3(event, newMaxValue)
+            console.log('a')
+            _allKeyDownHandler(event).checkIncludeSymbols()
+            _allKeyDownHandler(event).compareValues(newMaxValue)
 
             if (newMaxValue === limitValue - 1 || newMaxValue === defaultStep + 1) {
                 resetButtonDopClass()
             }
 
-            allKeyDownHandler2(event, "max")
+            _allKeyDownHandler(event).changeActiveButton("max")
         },
-        [allKeyDownHandler, newMaxValue, defaultStep, limitValue, resetButtonDopClass]
+        [newMaxValue, defaultStep, limitValue]
     )
 
-    const minOnKeyDownHandler = useCallback(
+    const minKeyDownHandler = useCallback(
         (event: KeyboardEvent<HTMLInputElement>) => {
-            allKeyDownHandler(event)
-
-            // down - 40, up - 38
-
-            // if (
-            //     (newMinValue === defaultMin && event.keyCode === 40) ||
-            //     (newMinValue === limitValue && event.keyCode === 38)
-            // ) {
-            //     event.preventDefault()
-            // }
-            //
-            // if (
-            //     (newMinValue !== defaultMin && event.keyCode === 40) ||
-            //     (newMinValue !== limitValue && event.keyCode === 38)
-            // ) {
-            //     setIsDopClassForButton(true)
-            // } else {
-            //     resetButtonDopClass()
-            // }
-
-            allKeyDownHandler3(event, newMinValue)
+            _allKeyDownHandler(event).checkIncludeSymbols()
+            _allKeyDownHandler(event).compareValues(newMinValue)
 
             if (newMinValue === limitValue + 1 || newMinValue === defaultMin + 1) {
                 resetButtonDopClass()
             }
 
-            allKeyDownHandler2(event, "min")
-
+            _allKeyDownHandler(event).changeActiveButton("min")
         },
-        [allKeyDownHandler, newMinValue, defaultMin, limitValue]
+        [newMinValue, defaultMin, limitValue]
     )
 
-    const stepOnKeyDownHandler = useCallback(
+    const stepKeyDownHandler = useCallback(
         (event: KeyboardEvent<HTMLInputElement>) => {
-            allKeyDownHandler(event)
+            _allKeyDownHandler(event).checkIncludeSymbols()
 
-            // down - 40, up - 38
             if (newStepValue === defaultStep && event.keyCode === 40) {
                 event.preventDefault()
             }
 
-            // if (
-            //     (newStepValue === defaultMin && event.keyCode === 40) ||
-            //     (newStepValue === limitValue && event.keyCode === 38)
-            // ) {
-            //     event.preventDefault()
-            // }
-            //
-            // if (
-            //     (event.keyCode === 40 && newStepValue > defaultMin + 2) ||
-            //     (event.keyCode === 38 && newStepValue !== limitValue)
-            // ) {
-            //     setIsDopClassForButton(true)
-            // } else {
-            //     resetButtonDopClass()
-            // }
-            allKeyDownHandler3(event, newMaxValue, defaultMin + 2)
-            allKeyDownHandler2(event, "step")
+            _allKeyDownHandler(event).compareValues(newMaxValue, defaultMin + 2)
+            _allKeyDownHandler(event).changeActiveButton("step")
         },
-        [allKeyDownHandler, newStepValue, defaultStep, defaultMin, resetButtonDopClass]
+        [newStepValue, defaultStep, defaultMin]
     )
-
-    // todo: reduce it
-    // PlusOnClick
-    const maxPlusOnClickHandler = useCallback(() => {
+    const buttonPlusHandler = (field: FieldType) => {
         falseStatusStatistics()
-        setNewMaxValue(actual => actual + 1)
-        maxRef.current && maxRef.current.focus()
-    }, [maxRef])
+        switch (field) {
+            case 'max': {
+                setNewMaxValue(actual => actual + 1)
+                fieldRefs?.max?.current?.focus()
+                break
+            }
+            case 'min': {
+                setNewMinValue(actual => actual + 1)
+                fieldRefs?.min?.current?.focus()
+                break
+            }
+            case 'step': {
+                setNewStepValue(actual => actual + 1)
+                fieldRefs?.step?.current?.focus()
+                break
+            }
+        }
+    }
 
-    const minPlusOnClickHandler = useCallback(() => {
+    const disabledButtons = {
+        maxMinus: newMaxValue < defaultMin + defaultStep + defaultStep,
+        maxPLus: newMaxValue === limitValue,
+        minMinus: newMinValue === defaultMin,
+        minPLus: newMinValue === limitValue,
+        stepMinus: newStepValue === defaultMin,
+        stepPLus: newStepValue === limitValue - 1
+    }
+
+    const buttonMinusHandler = (field: FieldType) => {
         falseStatusStatistics()
-        setNewMinValue(actual => actual + 1)
-        minRef.current && minRef.current.focus()
-    }, [minRef])
-
-    const stepPlusOnClickHandler = useCallback(() => {
-        falseStatusStatistics()
-        setNewStepValue(actual => actual + 1)
-        stepRef.current && stepRef.current.focus()
-    }, [stepRef])
-
-    const maxMinusButtonDisabled = newMaxValue < defaultMin + defaultStep + defaultStep
-    const maxPLusButtonDisabled = newMaxValue === limitValue
-
-    const minMinusButtonDisabled = newMinValue === defaultMin
-    const minPLusButtonDisabled = newMinValue === limitValue
-
-    const stepMinusButtonDisabled = newStepValue === defaultMin
-    const stepPLusButtonDisabled = newStepValue === limitValue - 1
-
-    // MinusOnClick
-    const maxMinusOnClickHandler = useCallback(() => {
-        falseStatusStatistics()
-        !maxMinusButtonDisabled && setNewMaxValue(actual => actual - 1)
-        maxRef.current && maxRef.current.focus()
-    }, [maxMinusButtonDisabled, maxRef])
-
-    const minMinusOnClickHandler = useCallback(() => {
-        falseStatusStatistics()
-        !minMinusButtonDisabled && setNewMinValue(actual => actual - 1)
-        minRef.current && minRef.current.focus()
-    }, [minMinusButtonDisabled, minRef])
-
-    const stepMinusOnClickHandler = useCallback(() => {
-        falseStatusStatistics()
-        !stepMinusButtonDisabled && setNewStepValue(actual => actual - 1)
-        stepRef.current && stepRef.current.focus()
-    }, [stepMinusButtonDisabled, stepRef])
+        switch (field) {
+            case 'max': {
+                !disabledButtons.maxMinus && setNewMaxValue(actual => actual - 1)
+                fieldRefs?.max?.current?.focus()
+                break
+            }
+            case 'min': {
+                !disabledButtons.minMinus && setNewMinValue(actual => actual - 1)
+                fieldRefs?.min?.current?.focus()
+                break
+            }
+            case 'step': {
+                !disabledButtons.stepMinus && setNewStepValue(actual => actual - 1)
+                fieldRefs?.step?.current?.focus()
+            }
+        }
+    }
 
     useEffect(() => {
         setErrors(initialErrors)
@@ -335,39 +294,34 @@ export const useSettingsForm = (callbackForNotification: (text: string) => void,
         falseStatusStatistics()
     }
 
-    // OnChange
+    const setValueChangeHandler = (event: ChangeEvent<HTMLInputElement>, field: 'max' | 'min', setValue: (value: number) => void) => {
+        if (Number(event.currentTarget.value) > limitValue) {
+            setErrors(errors => {
+                return field === 'max' ?  {...errors, max: errorMessageLength} : {...errors, min: errorMessageLength}
+            })
+
+            if (Array.from(event.currentTarget.value).length <= String(limitValue).split('').length) {
+                setValue(Number(event.currentTarget.value))
+            }
+        } else {
+            setValue(Number(event.currentTarget.value))
+        }
+    }
+
     const maxOnChangeHandler = useCallback(
         (event: ChangeEvent<HTMLInputElement>) => {
             onChangeHandler(event)
-
-            if (Number(event.currentTarget.value) > limitValue) {
-                setErrors(errors => ( {...errors, max: errorMessageLength} ))
-
-                if (Array.from(event.currentTarget.value).length <= String(limitValue).split('').length) {
-                    setNewMaxValue(Number(event.currentTarget.value))
-                }
-            } else {
-                setNewMaxValue(Number(event.currentTarget.value))
-            }
+            setValueChangeHandler(event, 'max', setNewMaxValue)
         },
-        [onChangeHandler, limitValue]
+        [limitValue]
     )
 
     const minOnChangeHandler = useCallback(
         (event: ChangeEvent<HTMLInputElement>) => {
             onChangeHandler(event)
-
-            if (Number(event.currentTarget.value) > limitValue) {
-                setErrors( errors => ({ ...errors, min: errorMessageLength }) )
-
-                if (Array.from(event.currentTarget.value).length <= String(limitValue).split('').length) {
-                    setNewMinValue(Number(event.currentTarget.value))
-                }
-            } else {
-                setNewMinValue(Number(event.currentTarget.value))
-            }
+            setValueChangeHandler(event, 'min', setNewMinValue)
         },
-        [onChangeHandler, limitValue]
+        [limitValue]
     )
 
     const stepOnChangeHandler = useCallback(
@@ -376,18 +330,18 @@ export const useSettingsForm = (callbackForNotification: (text: string) => void,
 
             if (event.currentTarget.value.length > 3) {
                 setNewStepValue(newStepValue)
-            } else if (Number(event.currentTarget.value) < defaultStep) {
+            } else
+                if (Number(event.currentTarget.value) < defaultStep) {
                 setErrors( errors => ( { ...errors, step: errorMessageDenyStep}) )
                 setNewStepValue(Number(event.currentTarget.value))
             } else {
                 setNewStepValue(Number(event.currentTarget.value))
             }
         },
-        [onChangeHandler, newStepValue]
+        [newStepValue]
     )
 
-    // Settings
-    const saveSettings = (max: number, min: number, step: number) => {
+    const saveSettings = useCallback((max: number, min: number, step: number) => {
         setNewMaxValue(max)
         setNewMinValue(min)
         setNewStepValue(step)
@@ -399,8 +353,9 @@ export const useSettingsForm = (callbackForNotification: (text: string) => void,
 
         dispatch(changeStatusStatisticsAC(true))
         dispatch(resetStatisticsAC())
-    }
+    }, [])
 
+    // todo: rename click settings
     const clickSaveSettings = useCallback(() => {
         saveSettings(newMaxValue, newMinValue, newStepValue)
         callbackForNotification(notificationSave)
@@ -408,9 +363,6 @@ export const useSettingsForm = (callbackForNotification: (text: string) => void,
         newMaxValue,
         newMinValue,
         newStepValue,
-        saveSettings,
-        notificationSave,
-        callbackForNotification,
     ])
 
     const defaultSettings = useCallback(() => {
@@ -421,9 +373,6 @@ export const useSettingsForm = (callbackForNotification: (text: string) => void,
         defaultMax,
         defaultMin,
         defaultStep,
-        saveSettings,
-        callbackForNotification,
-        notificationDefault,
     ])
 
     const randomSettings = useCallback(() => {
@@ -443,43 +392,23 @@ export const useSettingsForm = (callbackForNotification: (text: string) => void,
         limitValue,
         newStepValue,
         stepValue,
-        saveSettings,
-        callbackForNotification,
-        notificationRandom,
     ])
 
     return {
         isDopClassForButton,
-        maxOnChangeHandler, 
-        minOnChangeHandler, 
-        stepOnChangeHandler, 
+        changeHandlers: {max: maxOnChangeHandler, min: minOnChangeHandler, step: stepOnChangeHandler},
+        keyDownHandlers: {max: maxKeyDownHandler, min: minKeyDownHandler, step: stepKeyDownHandler},
+        newValues: { max: newMaxValue, min: newMinValue, step: newStepValue },
         warning,
         activeButton,
         saveDisabled,
         defaultDisabled,
-        newMaxValue,
-        newMinValue,
-        newStepValue,
-        maxOnKeyDownHandler,
-        minOnKeyDownHandler,
-        stepOnKeyDownHandler,
-        maxPlusOnClickHandler,
-        minPlusOnClickHandler,
-        stepPlusOnClickHandler,
-        maxMinusButtonDisabled,
-        maxPLusButtonDisabled,
-        minMinusButtonDisabled,
-        minPLusButtonDisabled,
-        stepMinusButtonDisabled,
-        stepPLusButtonDisabled,
-        maxMinusOnClickHandler,
-        minMinusOnClickHandler,
-        stepMinusOnClickHandler,
+        disabledButtons,
+        buttonPlusHandler,
+        buttonMinusHandler,
         errors,
-        maxRef,
+        fieldRefs,
         resetButtonDopClass,
-        minRef,
-        stepRef,
         defaultSettings,
         randomSettings,
         clickSaveSettings

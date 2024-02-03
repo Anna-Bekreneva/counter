@@ -1,4 +1,4 @@
-import React, {ChangeEvent, KeyboardEvent, memo, useCallback} from 'react'
+import React, {ChangeEvent, KeyboardEvent, memo, RefObject, useCallback} from 'react'
 
 import { Warning } from '../Warning'
 
@@ -8,7 +8,7 @@ type settingsItemPropsType = {
   error: string
   inputId: string
   labelText: string
-  link: React.RefObject<HTMLInputElement>
+  link: RefObject<HTMLInputElement> | null
   maxButtonDisabled: boolean
   minusButtonDisabled: boolean
   minusOnClick: () => void
@@ -21,7 +21,6 @@ type settingsItemPropsType = {
 }
 
 export const SettingsItem: React.FC<settingsItemPropsType> = memo(props => {
-  console.log(props.whichButtonDopClass)
   return (
     <div className={'settings__content'}>
       <div className={'settings__item'}>
