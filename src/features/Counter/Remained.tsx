@@ -2,18 +2,18 @@ import React, { memo } from 'react'
 
 import './../../styles/remained.css'
 
-type RemainedPropsType = {
-  button: string
+type PropsType = {
+  buttonText: string
   remained: () => void
   text: string
 }
 
-export const Remained: React.FC<RemainedPropsType> = memo(props => {
+export const Remained: React.FC<PropsType> = memo(( { text, remained, buttonText} ) => {
   return (
     <div className={'remained'}>
-      <span className={'remained__text'}>{props.text}</span>
-      <button className={'remained__button button'} onClick={props.remained} type={'button'}>
-        {props.button}
+      <span className={'remained__text'}>{text}</span>
+      <button className={'remained__button button'} onClick={remained} type={'button'}>
+        {buttonText}
       </button>
     </div>
   )

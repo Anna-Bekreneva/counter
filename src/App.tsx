@@ -16,8 +16,8 @@ function App() {
       <div className={'container'}>
         <h1 className={'heading'}>Counter</h1>
         <div className={'wrapper__container'}>
-          <Settings></Settings>
-          <Counter></Counter>
+          <Settings/>
+          <Counter/>
         </div>
       </div>
     </div>
