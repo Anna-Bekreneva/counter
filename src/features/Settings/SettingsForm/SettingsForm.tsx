@@ -1,6 +1,6 @@
 import React, {FC,} from 'react'
-import {SettingsItem} from './SettingsItem'
-import {SettingsManagement} from './SettingsManagement'
+import {SettingsItem} from '../SettingsItem'
+import {SettingsManagement} from '../SettingsManagement/SettingsManagement'
 import {useSettingsForm} from "./useSettingsForm";
 
 type SettingsFormPropsType = {
@@ -27,7 +27,7 @@ export const SettingsForm: FC<SettingsFormPropsType> = props => {
     fieldRefs,
     defaultSettings,
     randomSettings,
-    clickSaveSettings
+    saveSettings
   }
       = useSettingsForm(props.callbackForNotification, props.notificationText)
 
@@ -43,7 +43,7 @@ export const SettingsForm: FC<SettingsFormPropsType> = props => {
             inputId={'max'}
             labelText={'Enter max value'}
             link={fieldRefs.max}
-            maxButtonDisabled={disabledButtons.maxPLus}
+            plusButtonDisabled={disabledButtons.maxPLus}
             minusButtonDisabled={disabledButtons.maxMinus}
             minusOnClick={() => buttonMinusHandler('max')}
             newValue={newValues.max}
@@ -60,7 +60,7 @@ export const SettingsForm: FC<SettingsFormPropsType> = props => {
             inputId={'min'}
             labelText={'Enter min value'}
             link={fieldRefs.min}
-            maxButtonDisabled={disabledButtons.minPLus}
+            plusButtonDisabled={disabledButtons.minPLus}
             minusButtonDisabled={disabledButtons.minMinus}
             minusOnClick={() => buttonMinusHandler('min')}
             newValue={newValues.min}
@@ -77,7 +77,7 @@ export const SettingsForm: FC<SettingsFormPropsType> = props => {
             inputId={'step'}
             labelText={'Enter step'}
             link={fieldRefs.step}
-            maxButtonDisabled={disabledButtons.stepPLus}
+            plusButtonDisabled={disabledButtons.stepPLus}
             minusButtonDisabled={disabledButtons.stepMinus}
             minusOnClick={() => buttonMinusHandler('step')}
             newValue={newValues.step}
@@ -94,7 +94,7 @@ export const SettingsForm: FC<SettingsFormPropsType> = props => {
         defaultSettings={defaultSettings}
         randomSettings={randomSettings}
         saveDisabled={saveDisabled}
-        saveSettings={clickSaveSettings}
+        saveSettings={saveSettings}
       />
     </form>
   )

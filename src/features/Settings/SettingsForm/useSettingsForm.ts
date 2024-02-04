@@ -7,7 +7,7 @@ import {
     selectLimitValue,
     selectMaxValue, selectMinValue, selectStepValue, setValueAC,
     useAppSelector
-} from "../../state";
+} from "../../../state";
 import React, {
     ChangeEvent,
     KeyboardEvent,
@@ -16,14 +16,7 @@ import React, {
     useEffect,
     useState
 } from "react";
-import {
-    errorMessageDenyStep,
-    errorMessageGreaterMax,
-    errorMessageGreaterMaxForStep,
-    errorMessageGreaterStep, errorMessageLength,
-    errorMessageLessMin, notificationCan, notificationDefault, notificationForget, notificationRandom, notificationSave,
-    warningMessage
-} from "../../utils/messages";
+import {messages, notifications} from "../../../utils";
 
 export const useSettingsForm = (callbackForNotification: (text: string) => void, notificationText: string) => {
     const dispatch = useDispatch()
@@ -230,7 +223,7 @@ export const useSettingsForm = (callbackForNotification: (text: string) => void,
             newMaxValue >= newStepValue &&
             newMinValue < newMaxValue
         ) {
-            setWarning(warningMessage)
+            setWarning(messages.warning)
         } else if (
             (newMaxValue - newMinValue) % newStepValue === 0 ||
             newMaxValue < newStepValue ||
@@ -240,11 +233,11 @@ export const useSettingsForm = (callbackForNotification: (text: string) => void,
         }
 
         if (newMaxValue < newStepValue) {
-            setErrors(errors => ( {...errors, max: errorMessageGreaterMaxForStep, step: errorMessageGreaterStep} ))
+            setErrors(errors => ( {...errors, max: messages.greaterMaxForStep, step: messages.greaterStep} ))
         }
 
         if (newMinValue >= newMaxValue) {
-            setErrors(errors => ( {...errors, min: errorMessageLessMin, max: errorMessageGreaterMax} ))
+            setErrors(errors => ( {...errors, min: messages.lessMin, max: messages.greaterMax} ))
         }
 
         if (
@@ -271,8 +264,8 @@ export const useSettingsForm = (callbackForNotification: (text: string) => void,
             newMinValue >= newMaxValue
         ) {
             setSaveDisabled(true)
-            notificationText === notificationForget &&
-            callbackForNotification(notificationCan)
+            notificationText === notifications.forget &&
+            callbackForNotification(notifications.can)
         } else if (newStepValue < defaultStep) {
             setSaveDisabled(true)
         } else if (
@@ -283,7 +276,7 @@ export const useSettingsForm = (callbackForNotification: (text: string) => void,
             newMinValue < newMaxValue
         ) {
             setSaveDisabled(false)
-            callbackForNotification(notificationForget)
+            callbackForNotification(notifications.forget)
         }
 
         return () => {}
@@ -297,7 +290,7 @@ export const useSettingsForm = (callbackForNotification: (text: string) => void,
     const setValueChangeHandler = (event: ChangeEvent<HTMLInputElement>, field: 'max' | 'min', setValue: (value: number) => void) => {
         if (Number(event.currentTarget.value) > limitValue) {
             setErrors(errors => {
-                return field === 'max' ?  {...errors, max: errorMessageLength} : {...errors, min: errorMessageLength}
+                return field === 'max' ?  {...errors, max: messages.bigLength} : {...errors, min: messages.bigLength}
             })
 
             if (Array.from(event.currentTarget.value).length <= String(limitValue).split('').length) {
@@ -332,7 +325,7 @@ export const useSettingsForm = (callbackForNotification: (text: string) => void,
                 setNewStepValue(newStepValue)
             } else
                 if (Number(event.currentTarget.value) < defaultStep) {
-                setErrors( errors => ( { ...errors, step: errorMessageDenyStep}) )
+                setErrors( errors => ( { ...errors, step: messages.denyStep}) )
                 setNewStepValue(Number(event.currentTarget.value))
             } else {
                 setNewStepValue(Number(event.currentTarget.value))
@@ -356,9 +349,9 @@ export const useSettingsForm = (callbackForNotification: (text: string) => void,
     }, [])
 
     // todo: rename click settings
-    const clickSaveSettings = useCallback(() => {
+    const saveSettingsHandler = useCallback(() => {
         saveSettings(newMaxValue, newMinValue, newStepValue)
-        callbackForNotification(notificationSave)
+        callbackForNotification(notifications.save)
     }, [
         newMaxValue,
         newMinValue,
@@ -367,7 +360,7 @@ export const useSettingsForm = (callbackForNotification: (text: string) => void,
 
     const defaultSettings = useCallback(() => {
         saveSettings(defaultMax, defaultMin, defaultStep)
-        callbackForNotification(notificationDefault)
+        callbackForNotification(notifications.default)
         setErrors(initialErrors)
     }, [
         defaultMax,
@@ -387,7 +380,7 @@ export const useSettingsForm = (callbackForNotification: (text: string) => void,
 
         saveSettings(randomMax, randomMin, randomStep)
         setErrors(initialErrors)
-        callbackForNotification(notificationRandom)
+        callbackForNotification(notifications.random)
     }, [
         limitValue,
         newStepValue,
@@ -411,6 +404,6 @@ export const useSettingsForm = (callbackForNotification: (text: string) => void,
         resetButtonDopClass,
         defaultSettings,
         randomSettings,
-        clickSaveSettings
+        saveSettings: saveSettingsHandler
     }
 }
