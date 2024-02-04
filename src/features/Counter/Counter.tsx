@@ -1,7 +1,7 @@
 import React, {FC, memo} from 'react'
 
 import { CounterManagement } from './CounterManagement'
-import { Statistics } from './Statistics'
+import { Statistics } from './Statistics/Statistics'
 import { Tablo } from './Tablo'
 
 export const Counter: FC = memo(props => {

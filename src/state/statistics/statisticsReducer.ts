@@ -1,11 +1,11 @@
 export type statisticsStateType = {
-  decreaseButtonPressed: number
-  increaseButtonPressed: number
+  amountDecreaseButtonPressed: number
+  amountIncreaseButtonPressed: number
   isRunStatistics: boolean
-  statisticsMaxClick: number
-  statisticsMaxNumber: number
-  statisticsMinClick: number
-  statisticsMinNumber: number
+  statisticsAmountMaxClick: number
+  statisticsAmountMax: number
+  statisticsAmountMinClick: number
+  statisticsAmountMin: number
 }
 
 type ChangeStatusStatisticsAT = ReturnType<typeof changeStatusStatisticsAC>
@@ -26,13 +26,13 @@ type StatisticsActionsType =
   | SetStatisticsNumberAT
 
 const initialState: statisticsStateType = {
-  decreaseButtonPressed: 0,
-  increaseButtonPressed: 0,
+  amountDecreaseButtonPressed: 0,
+  amountIncreaseButtonPressed: 0,
   isRunStatistics: true,
-  statisticsMaxClick: 0,
-  statisticsMaxNumber: 0,
-  statisticsMinClick: 0,
-  statisticsMinNumber: 0,
+  statisticsAmountMaxClick: 0,
+  statisticsAmountMax: 0,
+  statisticsAmountMinClick: 0,
+  statisticsAmountMin: 0,
 }
 
 export const statisticsReducer = (
@@ -45,15 +45,15 @@ export const statisticsReducer = (
     }
 
     case 'CLICK-INCREASE-BUTTON': {
-      return { ...state, increaseButtonPressed: state.increaseButtonPressed + 1 }
+      return { ...state, amountIncreaseButtonPressed: state.amountIncreaseButtonPressed + 1 }
     }
 
     case 'CLICK-DECREASE-BUTTON': {
-      return { ...state, decreaseButtonPressed: state.decreaseButtonPressed + 1 }
+      return { ...state, amountDecreaseButtonPressed: state.amountDecreaseButtonPressed + 1 }
     }
 
     case 'RESET-STATISTICS': {
-      return { ...state, decreaseButtonPressed: 0, increaseButtonPressed: 0 }
+      return { ...state, amountDecreaseButtonPressed: 0, amountIncreaseButtonPressed: 0 }
     }
 
     case 'SET-STATISTICS': {

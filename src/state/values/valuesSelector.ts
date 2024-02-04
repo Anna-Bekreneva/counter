@@ -7,3 +7,4 @@ export const selectLimitValue = (state: AppRootStateType): number => state.value
 export const selectMaxValue = (state: AppRootStateType): number => state.values.maxValue
 export const selectMinValue = (state: AppRootStateType): number => state.values.minValue
 export const selectStepValue = (state: AppRootStateType): number => state.values.stepValue
+export const selectCounterValue = (state: AppRootStateType): number => state.values.counter
