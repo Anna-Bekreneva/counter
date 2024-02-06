@@ -1,8 +1,8 @@
 import { combineReducers, createStore } from 'redux'
 
-import { loadState, saveState } from '../utils/localstorage'
-import { statisticsReducer } from './statistics/statisticsReducer'
-import { valuesReducer } from './values/valuesReducer'
+import { loadState, saveState } from '../utils'
+import { statisticsReducer } from './statistics'
+import { valuesReducer } from './values'
 import {TypedUseSelectorHook, useSelector} from "react-redux";
 
 const rootReducer = combineReducers({

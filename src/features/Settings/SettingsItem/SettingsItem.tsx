@@ -36,11 +36,12 @@ export const SettingsItem: React.FC<PropsType> = memo((
         >
           {warning && <Warning text={warning}></Warning>}
 
-          <SettingsButton typeButton={'minus'}
-                         buttonDisabled={minusButtonDisabled}
-                         isDopClassForButton={isDopClassForButton}
-                         whichButtonDopClass={whichButtonDopClass}
-                         callback={minusOnClick}> - </SettingsButton>
+          <SettingsButton
+              typeButton={'minus'}
+              buttonDisabled={minusButtonDisabled}
+              isDopClassForButton={isDopClassForButton}
+              whichButtonDopClass={whichButtonDopClass}
+              callback={minusOnClick}> - </SettingsButton>
           <input
             className={'settings__input'}
             id={inputId}
@@ -53,11 +54,12 @@ export const SettingsItem: React.FC<PropsType> = memo((
             value={newValue}
           />
 
-            <SettingsButton typeButton={'plus'}
-                           buttonDisabled={plusButtonDisabled}
-                           isDopClassForButton={isDopClassForButton}
-                           whichButtonDopClass={whichButtonDopClass}
-                           callback={plusOnClick}> - </SettingsButton>
+            <SettingsButton
+                typeButton={'plus'}
+                buttonDisabled={plusButtonDisabled}
+                isDopClassForButton={isDopClassForButton}
+                whichButtonDopClass={whichButtonDopClass}
+                callback={plusOnClick}> - </SettingsButton>
 
         </div>
       </div>

@@ -4,7 +4,7 @@ import { CounterManagement } from './CounterManagement'
 import { Statistics } from './Statistics'
 import { Tablo } from './Tablo'
 
-export const Counter: FC = memo(props => {
+export const Counter: FC = memo(() => {
   return (
     <div className={'counter'}>
       <h2 className={'title'}>Tablo</h2>

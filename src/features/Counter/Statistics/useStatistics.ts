@@ -1,13 +1,13 @@
 import {useDispatch} from "react-redux";
 import {
-    changeStatusStatisticsAC,
+    changeStatusStatistics,
     selectAmountDecreaseButtonPressed,
     selectAmountIncreaseButtonPressed, selectCounterValue,
     selectIsRunStatistics, selectMaxValue, selectMinValue,
     selectStatisticsAmountMax,
     selectStatisticsAmountMaxClick,
     selectStatisticsAmountMin,
-    selectStatisticsAmountMinClick, selectStepValue, setStatisticsAC, setStatisticsClickAC, setStatisticsNumberAC,
+    selectStatisticsAmountMinClick, selectStepValue, setStatistics, setStatisticsAmountClick, setStatisticsAmountNumber,
     useAppSelector
 } from "../../../state";
 import {useEffect} from "react";
@@ -28,30 +28,30 @@ export const useStatistics = () => {
     const counter = useAppSelector(selectCounterValue)
 
     useEffect(() => {
-        dispatch(setStatisticsNumberAC('statisticsMaxNumber', maxNumber, counter))
-        dispatch(setStatisticsClickAC('statisticsMaxClick', maxNumber, counter, stepNumber))
+        dispatch(setStatisticsAmountNumber('statisticsAmountMax', maxNumber, counter))
+        dispatch(setStatisticsAmountClick('statisticsAmountMaxClick', maxNumber, counter, stepNumber))
 
         return () => {}
-    }, [counter, maxNumber])
+    }, [counter, maxNumber, stepNumber])
 
     useEffect(() => {
-        dispatch(setStatisticsNumberAC('statisticsMinNumber', counter, minNumber))
-        dispatch(setStatisticsClickAC('statisticsMinClick', counter, minNumber, stepNumber))
+        dispatch(setStatisticsAmountNumber('statisticsAmountMin', counter, minNumber))
+        dispatch(setStatisticsAmountClick('statisticsAmountMinClick', counter, minNumber, stepNumber))
 
         return () => {}
-    }, [counter, minNumber])
+    }, [counter, minNumber, stepNumber])
 
     useEffect(() => {
         if (isRunStatistics) {
-            dispatch(changeStatusStatisticsAC(isRunStatistics))
+            dispatch(changeStatusStatistics(isRunStatistics))
         }
 
         if (amountIncreaseButtonPressed) {
-            dispatch(setStatisticsAC('increaseButtonPressed', Number(amountIncreaseButtonPressed)))
+            dispatch(setStatistics('amountIncreaseButtonPressed', Number(amountIncreaseButtonPressed)))
         }
 
         if (amountDecreaseButtonPressed) {
-            dispatch(setStatisticsAC('decreaseButtonPressed', Number(amountDecreaseButtonPressed)))
+            dispatch(setStatistics('amountDecreaseButtonPressed', Number(amountDecreaseButtonPressed)))
         }
 
         return () => {}

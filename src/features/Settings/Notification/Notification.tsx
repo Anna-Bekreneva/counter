@@ -1,10 +1,10 @@
 import React, {FC, memo} from 'react'
 
-type NotificationPropsType = {
+type PropsType = {
   text: string
 }
 
-export const Notification: FC<NotificationPropsType> = memo(({text}) => {
+export const Notification: FC<PropsType> = memo(({text}) => {
   return (
     <div className={'tablo tablo--mini'}>
       <p>{text}</p>

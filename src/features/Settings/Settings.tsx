@@ -1,19 +1,17 @@
-import React, {FC, memo, useCallback, useState} from 'react'
+import React, {FC, memo, useState} from 'react'
 
 import { Notification, SettingsForm } from './'
 
 export const Settings: FC = memo(props => {
-  const [notificationText, setNotificationText] = useState('You can manage settings')
-
-  const callbackForNotification = useCallback((text: string) => setNotificationText(text), [])
+  const [notification, setNotification] = useState('You can manage settings')
 
   return (
     <div className={'settings'}>
       <h2 className={'title'}>Settings</h2>
-      <Notification text={notificationText} />
+      <Notification text={notification} />
       <SettingsForm
-        callbackForNotification={callbackForNotification}
-        notificationText={notificationText}
+        setNotification={setNotification}
+        notification={notification}
       />
     </div>
   )

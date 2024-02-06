@@ -1,12 +1,5 @@
 import React from 'react'
 
-// todo: why so many styles
-import './styles/counter.css'
-import './styles/global.css'
-import './styles/reset.css'
-import './styles/settings.css'
-import './styles/statistics.css'
-
 import { Counter } from './features'
 import { Settings } from './features'
 

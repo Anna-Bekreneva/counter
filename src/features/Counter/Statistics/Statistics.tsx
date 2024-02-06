@@ -3,7 +3,7 @@ import {useStatistics} from "./useStatistics";
 import {StatisticsNumber} from "./StatisticsNumber";
 import {StatisticsButtonPressed} from "./StatisticsButtonPressed";
 
-export const Statistics: FC = memo(props => {
+export const Statistics: FC = memo(() => {
 
   const {
     isRunStatistics,
