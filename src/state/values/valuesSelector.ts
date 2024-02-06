@@ -1,6 +1,6 @@
 import {AppRootStateType} from "../store";
 export const selectDefaultMin = (state: AppRootStateType): number => state.values.defaultMin
-export const selectDefaultMax = (state: AppRootStateType): number => state.values.defaultMin
+export const selectDefaultMax = (state: AppRootStateType): number => state.values.defaultMax
 export const selectDefaultStep = (state: AppRootStateType): number => state.values.defaultStep
 export const selectLimitValue = (state: AppRootStateType): number => state.values.limitValue
 

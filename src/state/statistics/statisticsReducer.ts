@@ -57,7 +57,6 @@ export const statisticsReducer = (state = initialState, action: StatisticsAction
 
     case 'SET-STATISTICS-AMOUNT-NUMBER': {
       const result = action.number1 - action.number2
-      console.log({ ...state, [action.numberType]: result })
       return { ...state, [action.numberType]: result }
     }
   }
