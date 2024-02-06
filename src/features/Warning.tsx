@@ -1,8 +1,5 @@
 import React, {FC, memo} from 'react'
 
-// todo: do i need to include styles here?
-import './../styles/warning.css'
-
 type PropsType = {
   text: string
 }

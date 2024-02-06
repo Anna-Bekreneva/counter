@@ -1,7 +1,5 @@
 import React, {FC, memo} from 'react'
 
-import './../../styles/remained.css'
-
 type PropsType = {
   buttonText: string
   remained: () => void
