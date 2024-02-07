@@ -59,7 +59,7 @@ export const SettingsItem: React.FC<PropsType> = memo((
                 buttonDisabled={plusButtonDisabled}
                 isDopClassForButton={isDopClassForButton}
                 whichButtonDopClass={whichButtonDopClass}
-                callback={plusOnClick}> - </SettingsButton>
+                callback={plusOnClick}> + </SettingsButton>
 
         </div>
       </div>
